@@ -49,6 +49,9 @@ public class Pokemon extends BaseEntity {
     @Lob
     private String flavorText;
 
+    @Transient
+    private Map<String, String> _flavorText;
+
     // Type1 || Type2
     private String types;
 

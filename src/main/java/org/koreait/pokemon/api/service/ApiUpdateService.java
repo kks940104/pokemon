@@ -1,5 +1,7 @@
 package org.koreait.pokemon.api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.koreait.pokemon.api.entities.*;
 import org.koreait.pokemon.entities.Pokemon;
@@ -9,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 public class ApiUpdateService {
     private final RestTemplate tpl;
     private final PokemonRepository repository;
+    private final ObjectMapper om;
 
     /**
      * 1페이지당 100개씩 DB 반영
@@ -116,6 +121,17 @@ public class ApiUpdateService {
                     .collect(Collectors.joining("||"));
             pokemon.setFlavorText(versionFlavorText);
 
+            Map<String, String> flavorTexts = data2.getFlavorTextEntries().stream()
+                    .filter(d -> d.getLanguage().getName().equals("ko"))
+                    .collect(Collectors.toMap(d -> d.getVersion().getName(), d -> d.getFlavorText(), (p1, p2) -> p2));
+
+
+            try {
+                 String json = om.writeValueAsString(flavorTexts);
+                 pokemon.setFlavorText(json);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             // endregion
 
             // region 포켓몬 분류

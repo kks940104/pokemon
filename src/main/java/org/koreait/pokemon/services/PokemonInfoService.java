@@ -1,5 +1,7 @@
 package org.koreait.pokemon.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +40,7 @@ public class PokemonInfoService {
     private final Utils utils;
     private final HttpServletRequest request;
     private final JPAQueryFactory queryFactory;
+    private final ObjectMapper om;
 
     /**
      * 포켓몬 목록 조회
@@ -112,6 +115,15 @@ public class PokemonInfoService {
         String types = item.getTypes();
         if (StringUtils.hasText(types)) {
             item.set_types(Arrays.stream(types.split("\\|\\|")).toList());
+        }
+
+        String flavorText = item.getFlavorText();
+        if (StringUtils.hasText(flavorText)) {
+            try {
+                Map<String, String> _flavorText = om.readValue(flavorText, new TypeReference<>() {
+                });
+                item.set_flavorText(_flavorText);
+            } catch (Exception e) {}
         }
     }
 
