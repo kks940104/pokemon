@@ -50,16 +50,20 @@ public class Pokemon extends BaseEntity {
     private String flavorText;
 
     @Transient
-    private Map<String, String> _flavorText;
+    private Map<String, String> _flavorText; // Version 및 포켓몬 설명 Map 으로 나눔
 
     // Type1 || Type2
     private String types;
 
     // 특성1 || 특성2 || 특성3
+    @Lob
     private String abilities;
 
     @Column(length=100)
     private String genus; // 분류
+
+    @Transient
+    private Map<String, Map<String, Boolean>> _abilityFlavorText; // 특성 및 설명 Map 형태로 넣음.
 
     @Transient
     private List<String> _types; // 타입 가공된 데이터
@@ -73,8 +77,8 @@ public class Pokemon extends BaseEntity {
     @Transient
     private Map<String, Object> nextItem;
 
-    @ToString.Exclude
+/*    @ToString.Exclude
     @OneToMany(mappedBy = "pokemon", cascade = CascadeType.REMOVE)
-    private List<DataByVersion> items;
+    private List<DataByVersion> items;*/
 
 }

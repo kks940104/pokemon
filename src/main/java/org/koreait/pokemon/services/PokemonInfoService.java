@@ -23,6 +23,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -105,10 +106,10 @@ public class PokemonInfoService {
      */
     private void addInfo(Pokemon item) {
         // abilities
-        String abilities = item.getAbilities();
+/*        String abilities = item.getAbilities();
         if (StringUtils.hasText(abilities)) {
             item.set_abilities(Arrays.stream(abilities.split("\\|\\|")).toList());
-        }
+        }*/
 
 
         // types
@@ -123,6 +124,15 @@ public class PokemonInfoService {
                 Map<String, String> _flavorText = om.readValue(flavorText, new TypeReference<>() {
                 });
                 item.set_flavorText(_flavorText);
+            } catch (Exception e) {}
+        }
+
+        String abilityFlavorText = item.getAbilities();
+        if (StringUtils.hasText(abilityFlavorText)) {
+            try {
+                Map<String, Map<String, Boolean>> _abilityFlavorText = om.readValue(abilityFlavorText, new TypeReference<>() {
+                });
+                item.set_abilityFlavorText(_abilityFlavorText);
             } catch (Exception e) {}
         }
     }

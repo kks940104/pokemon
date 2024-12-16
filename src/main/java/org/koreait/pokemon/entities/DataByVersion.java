@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.koreait.pokemon.api.entities.UrlItem;
 
-@Data
-@Entity
+/*@Data
+@Entity*/
 public class DataByVersion {
-    @Id
+/*    @Id
     @Column(length=10)
     private String version;
     @Lob
@@ -18,5 +18,5 @@ public class DataByVersion {
     private Pokemon pokemon;
 
     @Transient
-    private UrlItem urlItem;
+    private UrlItem urlItem;*/
 }

@@ -14,7 +14,6 @@
                  th:text="*{#strings.concat('No.', #numbers.formatInteger(seq, 4))}"></div>
             <div class="item-nm" th:text="*{name}"></div>
             <div class="flavor-text" th:text="*{flavorText}"></div>
-
             <div class="spec-info">
                 <ul>
                     <li>
@@ -25,7 +24,6 @@
                         </div>
                     </li>
                     <li>
-
                         <div class="tit" th:text="#{키}"></div>
                         <div class="text" th:text="*{#strings.concat(height / 10.0, 'm')}"></div>
                     </li>
@@ -47,7 +45,7 @@
                     <li>
                         <div class="tit" th:text="#{특성}"></div>
                         <div class="text">
-                            <span th:each="ability : *{_abilities}" th:text="${ability}"></span>
+                            <span th:each="ability : *{_abilityFlavorText}" th:text="${ability}"></span>
                         </div>
                     </li>
                 </ul>
