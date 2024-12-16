@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <footer th:fragment="common">
+    <div class="ft_top layout-width">
+      <a th:href="@{/}" class="logo">
+        <img th:src="@{/front/images/ft_logo.png}" />
+      </a>
+      <ul class="ft_menu">
+        <li class="main-li">
+          <a href="#">
+            <th:block th:text="#{회사소개}"></th:block>
+          </a>
+        </li>
+        <li class="main-li">
+          <a href="#">
+            <th:block th:text="#{사업내용}"></th:block>
+          </a>
+        </li>
+        <li class="main-li">
+          <a href="#">
+            <th:block th:text="#{제휴안내}"></th:block>
+          </a>
+        </li>
+        <li class="main-li">
+          <a href="#">
+            <th:block th:text="#{이용약관}"></th:block>
+          </a>
+        </li>
+        <li class="main-li">
+          <a href="#">
+            <th:block th:text="#{개인정보처리방침}"></th:block>
+          </a>
+        </li>
+        <li class="main-li">
+          <a href="#">
+            <th:block th:text="#{이메일무단수집거부}"></th:block>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <th:block th:text="#{고객센터}"></th:block>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="ft_mid">
+      <div class="ft_mid_container layout-width">
+        <p>(주)포켓몬코리아 경기도 용인시 수지구 신수로 801, 4층</p>
+        <ul class="ft_mid_ul">
+          <li class="ft_mid_li">
+            <th:block th:text="#{대표이사:임재범}"></th:block>
+          </li>
+          <li class="ft_mid_li">
+            <th:block th:text="#{개인정보관리책임자:임재범}"></th:block>
+          </li>
+          <li class="ft_mid_li">
+            <th:block th:text="#{사업자등록번호:113-86-07676}"></th:block>
+          </li>
+        </ul>
+      </div>
+      <div class="ft_mid_container2">
+        <ul class="ft_mid_ul_icon">
+          <li>
+            <a
+              href="https://www.instagram.com/pokemon_korea_official/?igshid=OGQ5ZDc2ODk2ZA%3D%3D"
+              target="_blank"
+            >
+              <i class="ft_icon ft_instagram"></i>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.youtube.com/user/PokemonKoreaInc"
+              target="_blank"
+            >
+              <i class="ft_icon ft_youtube"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://x.com/PokemonKoreaInc" target="_blank">
+              <i class="ft_icon ft_twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.tiktok.com/@pokemon_kor" target="_blank">
+              <i class="ft_icon ft_tictok"></i>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.pokemonstore.co.kr/" target="_blank">
+              <i class="ft_icon ft_store"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft_btm layout-width">
+      <div>
+        <div class="ft_btm_inquiry">
+          <div>
+            <span>고객센터</span>
+          </div>
+          <div class="ft_btm_inquiry2">
+            <div class="ft_btm_operate">
+              <span>운영시간 : 평일 15시 ~ 18시</span>
+              <span>031-272-0108 </span>
+            </div>
+            <span>카드 게임 및 카드 게임 이벤트 : 1588-4273</span>
+            <span>webmaster@pokemonkorea.co.kr</span>
+          </div>
+        </div>
+        <div>
+          <span>※당사에서는 Pokémon GO 관련 문의는 대응하지 않습니다. </span>
+        </div>
+      </div>
+      <div class="ft_btm_container_copy">
+        <div class="ft_btm_copylight">
+          <span
+            >©2024 Pokémon. ©1995-2024 Nintendo/Creatures Inc./GAME FREAK
+            inc.</span
+          >
+          <span
+            >©Nintendo, Creatures, GAME FREAK, TV Tokyo, ShoPro, JR Kikaku.
+            ©Pokémon. ©1998-2020 PIKACHU PROJECT.</span
+          >
+          <span
+            >포켓몬스터, 포켓몬, Pokémon, 몬스터볼, Nintendo Switch, Nintendo
+            3DS, Nintendo DS는 Nintendo의 상표입니다.</span
+          >
+        </div>
+        <span
+          >본 사이트의 콘텐츠에 대한 무단 복제 및 도용을 금하며 이를 어길 시
+          법적 조치를 받을 수 있습니다.</span
+        >
+      </div>
+    </div>
+  </footer>
+</html>
+-
