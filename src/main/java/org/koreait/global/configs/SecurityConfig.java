@@ -1,10 +1,8 @@
 package org.koreait.global.configs;
 
-import org.codehaus.groovy.transform.SourceURIASTTransformation;
-import org.koreait.member.services.LoginFailureHandler;
-import org.koreait.member.services.LoginSuccessHandler;
-import org.koreait.member.services.MemberAccessDeniedHandler;
-import org.koreait.member.services.MemberAuthenticationExceptionHandler;
+
+import lombok.RequiredArgsConstructor;
+import org.koreait.member.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +19,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableMethodSecurity // 요청 메서드로 권한 통제 가능.
 public class SecurityConfig {
+
+    @Autowired
+    private MemberInfoService memberInfoService;
 
     // 이 수동빈 정말 중요.
     @Bean
@@ -77,6 +78,18 @@ public class SecurityConfig {
         http.exceptionHandling(c -> {
             c.authenticationEntryPoint(new MemberAuthenticationExceptionHandler()) // 미로그인시 인가 실패
                     .accessDeniedHandler(new MemberAccessDeniedHandler()); // 로그인 이후 인가 실패
+        });
+
+        // endregion
+
+        // region 자동 로그인 설정
+
+        // rememberMe 쿠키가 나옴.
+        http.rememberMe(c -> {
+           c.rememberMeParameter("autoLogin") // rememberMe 파라미터.
+                   .tokenValiditySeconds(60 * 60 * 24 * 30)// 자동 로그인을 유지할 시간. 초단위. default 14일
+                   .userDetailsService(memberInfoService) // 조회할 Service
+                   .authenticationSuccessHandler(new LoginSuccessHandler()); // 성공시 Callback...
         });
 
         // endregion
