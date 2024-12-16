@@ -64,7 +64,7 @@ public class EmailService {
             }
 
             helper.setSubject(subject);
-            helper.setText(content, true);
+            helper.setText(html, true);
 
             javaMailSender.send(message);
 
