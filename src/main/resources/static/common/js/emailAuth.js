@@ -1,4 +1,4 @@
-var commonLib = commonLib : {};
+var commonLib = commonLib ?? {};
 
 /**
 * 이메일 인증 코드 관련
@@ -7,7 +7,7 @@ var commonLib = commonLib : {};
 commonLib.emailAuth = {
     timer: {
         seconds: 180, // 3분
-        intervalId: null;
+        intervalId: null,
         reset(callback) { // 타이머 초기화
             this.stop();
             this.seconds = 180;

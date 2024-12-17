@@ -172,6 +172,7 @@ public class MemberController {
         } else if (mode.equals("join")) { // 회원가입 공통 처리
             pageTitle = utils.getMessage("회원가입");
             addCommonScript.add("address");
+            addCommonScript.add("emailAuth");
             addScript.add("member/join");
         } else if(mode.equals("agree")) { // 약관 동의 페이지에 최초 접근시 약관 선택을 초기화.
             model.addAttribute("requestAgree",requestAgree());
