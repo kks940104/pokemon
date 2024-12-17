@@ -39,6 +39,7 @@ public class ApiUpdateService {
             return;
         }
 
+
         // region 상세 정보 처리
 
         List<Pokemon> pokemons = new ArrayList<>();
@@ -52,6 +53,7 @@ public class ApiUpdateService {
             pokemon.setWeight(data1.getWeight());
             pokemon.setBaseExperience(data1.getBaseExperience());
             pokemon.setFrontImage(data1.getSprites().getOther().getOfficialArtwork().get("front_default"));
+            pokemon.setFrontDefault(data1.getSprites().getFrontDefault());
 
             // region 타입 처리
 

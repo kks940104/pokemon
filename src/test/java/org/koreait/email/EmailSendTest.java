@@ -1,7 +1,6 @@
 package org.koreait.email;
 
 import jakarta.mail.internet.MimeMessage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.koreait.email.controllers.RequestEmail;
 import org.koreait.email.services.EmailService;

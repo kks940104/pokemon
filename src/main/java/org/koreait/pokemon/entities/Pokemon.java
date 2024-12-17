@@ -45,6 +45,8 @@ public class Pokemon extends BaseEntity {
 
     private String frontImage;
 
+    private String frontDefault;
+
     // 포켓몬 설명 Text
     @Lob
     private String flavorText;

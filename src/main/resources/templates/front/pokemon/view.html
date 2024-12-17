@@ -7,14 +7,142 @@
     <th:block th:replace="~{/front/pokemon/_navigator::navigator}"></th:block>
 
     <section class="details" th:object="${item}">
-        <div class="left"
-             th:utext="*{@utils.showImage(frontImage, 390, 390, 'image')}"></div>
-        <div class="right">
-            <div class="item-no"
+        <table>
+            <tr>
+                <th scope="col" th:utext="*{@utils.showImage(frontImage, 390, 390, 'image')}">
+                </th>
+            </tr>
+            <tr>
+                <td th:text="*{name}"></td>
+            </tr>
+        </table>
+        <div class="bottom">
+  <!--          <div class="item-no"
                  th:text="*{#strings.concat('No.', #numbers.formatInteger(seq, 4))}"></div>
-            <div class="item-nm" th:text="*{name}"></div>
-            <div class="flavor-text" th:text="*{flavorText}"></div>
-            <div class="spec-info">
+            <div class="item-nm" th:text="*{name}"></div>-->
+            <div class="flavor-text"> <!--설명-->
+
+                <table><!-- 기본정보 S-->
+                    <tr>
+                        <th th:text="#{기본정보}"></th>
+                    </tr>
+                    <tr>
+                        <th scope="col" th:text="#{이름}"></th>
+                        <th scope="col" th:text="#{도감번호}"></th>
+                        <th scope="col" th:text="#{타입}"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div th:utext="*{@utils.showImage(frontImage, 30, 30, 'image')}"></div>
+                            <dt th:text="*{name}"></dt>
+                            <dd th:text="*{nameEn}"></dd>
+                        </td>
+                        <td th:text="*{#strings.concat('No.', #numbers.formatInteger(seq, 4))}"></td>
+                        <td>
+                            <th:block th:each="type : *{_types}">
+                                <div th:text="${#messages.msg(type)}"></div>
+                            </th:block>
+                        </td>
+                    </tr>
+                </table><!-- 기본정보 E-->
+
+                <table><!--세부정보 S-->
+                    <tr>
+                        <th th:text="#{세부 정보}"></th>
+                    </tr>
+                    <tr>
+                        <th th:text="#{포켓몬}"></th>
+                        <th th:text="#{분류}"></th>
+                        <th th:text="#{신장}"></th>
+                        <th th:text="#{체중}"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <dt th:text="*{#strings.concat('No.', #numbers.formatInteger(seq, 4))}"></dt>
+                            <dd th:text="*{name}"></dd>
+                        </td>
+                        <td th:text="*{genus}"></td>
+                        <td th:text="*{#strings.concat(height / 10.0, 'm')}"></td>
+                        <td th:text="*{#strings.concat(weight / 10.0, 'kg')}"></td>
+                    </tr>
+                </table><!--세부정보 E-->
+
+                <table><!-- 특성 S-->
+                    <tr>
+                        <th th:text="#{특성 + '(숨겨진 특성은*)'}"></th>
+                    </tr>
+                    <tr>
+                        <th:block th:each="ability : *{_abilityFlavorText}">
+                            <th:block th:each="abilityFlavorText : ${ability.value}">
+                                <td th:if="${abilityFlavorText.value}" th:text="${'*' + ability.key}"></td> <!-- 두가지의 조건을 거는법 알아보기. -->
+                                <td th:if="${abilityFlavorText.value}" th:text="${abilityFlavorText.key}"></td>
+                            </th:block>
+                        </th:block>
+                    </tr>
+                    <tr>
+                        <th:block th:each="ability : *{_abilityFlavorText}">
+                            <th:block th:each="abilityFlavorText : ${ability.value}">
+                                <td th:if="${!abilityFlavorText.value}" th:text="${ability.key}"></td>
+                                <td th:if="${!abilityFlavorText.value}" th:text="${abilityFlavorText.key}"></td>
+                            </th:block>
+                        </th:block>
+                    </tr>
+                </table><!-- 특성 E-->
+
+                <table> <!--종족치 S-->
+                    <tr>
+                        <th th:text="#{종족치}"></th>
+                    </tr>
+                    <tr>
+                        <th th:text="#{포켓몬}"></th>
+                        <th th:text="#{HP}"></th>
+                        <th th:text="#{공격}"></th>
+                        <th th:text="#{방어}"></th>
+                        <th th:text="#{특수공격}"></th>
+                        <th th:text="#{특수방어}"></th>
+                        <th th:text="#{스피드}"></th>
+                        <th th:text="#{합계}"></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div th:utext="*{@utils.showImage(frontImage, 30, 30, 'image')}"></div>
+                            <dt th:text="*{name}"></dt>
+                        </td>
+                        <td th:text="*{hp}"></td>
+                        <td th:text="*{attack}"></td>
+                        <td th:text="*{defense}"></td>
+                        <td th:text="*{specialAttack}"></td>
+                        <td th:text="*{specialDefense}"></td>
+                        <td th:text="*{speed}"></td>
+                        <td th:text="*{hp} + *{attack} + *{defense} + *{specialAttack} + *{specialDefense} + *{speed}"></td>
+                    </tr>
+                </table> <!--종족치 E-->
+
+                <table><!-- 도감설명 S-->
+                    <tr>
+                        <th th:text="#{도감설명}"></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <div th:utext="*{@utils.showImage(frontImage, 30, 30, 'image')}"></div>
+                            <dt th:text="*{#strings.concat('No.', #numbers.formatInteger(seq, 4))}"></dt>
+                            <dd th:text="*{name}"></dd>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="col" th:text="#{버전}"></th>
+                        <th scope="col" th:text="#{설명}"></th>
+                    </tr>
+                    <th:block th:each="flavorText : *{_flavorText}">
+                        <tr>
+                            <td th:text="${#messages.msg(flavorText.key)}"></td>
+                            <td th:text="${#messages.msg(flavorText.value)}"></td>
+                        </tr>
+                    </th:block>
+                </table><!-- 도감설명 E-->
+            </div>
+
+            <!--<div class="spec-info">
                 <ul>
                     <li>
                         <div class="tit" th:text="#{타입}"></div>
@@ -45,11 +173,17 @@
                     <li>
                         <div class="tit" th:text="#{특성}"></div>
                         <div class="text">
-                            <span th:each="ability : *{_abilityFlavorText}" th:text="${ability}"></span>
+                            <th:block th:each="ability : *{_abilityFlavorText}">
+                                <th:block th:each="abilityFlavorText : ${ability.value}">
+                                    <div th:text="${ability.key}"></div>
+                                    <div th:text="${abilityFlavorText.key}"></div>
+                                    <div th:text="${abilityFlavorText.value}"></div>
+                                </th:block>
+                            </th:block>
                         </div>
                     </li>
                 </ul>
-            </div> <!--// spec-info -->
+            </div> &lt;!&ndash;// spec-info &ndash;&gt;-->
             <a href="#" target="_blank" class="go-link">
                 <th:block th:text="*{name}"></th:block>
                 <th:block th:text="#{상품 보러가기}"></th:block>
