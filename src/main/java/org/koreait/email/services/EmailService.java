@@ -77,4 +77,29 @@ public class EmailService {
 
         return false;
     }
+
+    public boolean sendEmail(RequestEmail form, String tpl) {
+        return sendEmail(form, tpl, null);
+    }
+
+    public boolean sendEmail(String to, String subject, String content) {
+        RequestEmail form = new RequestEmail();
+        form.setTo(List.of(to));
+        form.setSubject(subject);
+        form.setContent(content);
+
+        return sendEmail(form, "general");
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
