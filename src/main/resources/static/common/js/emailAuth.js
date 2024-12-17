@@ -40,14 +40,14 @@ commonLib.emailAuth = {
     * 인증 코드 전송
     *
     */
-    sendCode(email, timberCallback, successCallback) {
+    sendCode(email, timerCallback, successCallback) {
         const { ajaxLoad } = commonLib;
         const { timer } = this;
         (async() => {
             try {
                await ajaxLoad(`/api/email/auth/${email}`);
-               timer.reset(callback);
-               timer.start(callback);
+               timer.reset(timerCallback);
+               timer.start(timerCallback);
 
                if (typeof successCallback === 'function') {
                    successCallback();
