@@ -41,7 +41,7 @@ public class EmailAuthService {
          * 만료시간은 3분
          * 사용자의 입력을 검즘하기 위해서 세션에 인증코드와 만료시간을 기록.
          */
-        int autoCode = random.nextInt(99999);
+        Integer autoCode = random.nextInt(99999);
 
         LocalDateTime expired = LocalDateTime.now().plusMinutes(3L);
 
@@ -70,10 +70,14 @@ public class EmailAuthService {
         }
 
         LocalDateTime expired = (LocalDateTime) session.getAttribute("expiredTime");
-        int authCode = (int) session.getAttribute("authCode");
+        Integer authCode = (Integer) session.getAttribute("authCode");
 
-        if (expired.isBefore(LocalDateTime.now())) { // 코드가 만료된 경우.
+        if (expired != null && expired.isBefore(LocalDateTime.now())) { // 코드가 만료된 경우.
             throw new AuthCodeExpiredException();
+        }
+
+        if (authCode == null) {
+            throw new BadRequestException();
         }
 
         if (!code.equals(authCode)) { // 인증 코드가 일치하지 않는 경우
