@@ -14,6 +14,7 @@
             </tr>
             <tr>
                 <td th:text="*{name}"></td>
+                <!--<td th:text="*{@pUtils.getColorByType(type)}"></td> 참고자료용-->
             </tr>
         </table>
         <div class="bottom">
@@ -69,24 +70,24 @@
 
                 <table><!-- 특성 S-->
                     <tr>
-                        <th th:text="#{특성 + '(숨겨진 특성은*)'}"></th>
+                        <th th:text="${#strings.concat('특성', '(숨겨진 특성은*)')}"></th>
                     </tr>
                     <tr>
                         <th:block th:each="ability : *{_abilityFlavorText}">
                             <th:block th:each="abilityFlavorText : ${ability.value}">
-                                <td th:if="${abilityFlavorText.value}" th:text="${'*' + ability.key}"></td> <!-- 두가지의 조건을 거는법 알아보기. -->
-                                <td th:if="${abilityFlavorText.value}" th:text="${abilityFlavorText.key}"></td>
+                                <th:block th:if="${abilityFlavorText.value}">
+                                    <td th:text="${#strings.concat('*',  ability.key)}"></td> <!-- 두가지의 조건을 거는법 알아보기. -->
+                                    <td th:text="${abilityFlavorText.key}"></td>
+                                </th:block>
+                                <th:block th:unless="${abilityFlavorText.value}">
+                                    <td th:text="${ability.key}"></td>
+                                    <td th:text="${abilityFlavorText.key}"></td>
+                                </th:block>
+
                             </th:block>
                         </th:block>
                     </tr>
-                    <tr>
-                        <th:block th:each="ability : *{_abilityFlavorText}">
-                            <th:block th:each="abilityFlavorText : ${ability.value}">
-                                <td th:if="${!abilityFlavorText.value}" th:text="${ability.key}"></td>
-                                <td th:if="${!abilityFlavorText.value}" th:text="${abilityFlavorText.key}"></td>
-                            </th:block>
-                        </th:block>
-                    </tr>
+
                 </table><!-- 특성 E-->
 
                 <table> <!--종족치 S-->

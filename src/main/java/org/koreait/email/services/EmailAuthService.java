@@ -41,18 +41,18 @@ public class EmailAuthService {
          * 만료시간은 3분
          * 사용자의 입력을 검즘하기 위해서 세션에 인증코드와 만료시간을 기록.
          */
-        Integer autoCode = random.nextInt(99999);
+        Integer authCode = random.nextInt(10000, 99999);
 
         LocalDateTime expired = LocalDateTime.now().plusMinutes(3L);
 
-        session.setAttribute("authCode", autoCode);
+        session.setAttribute("authCode", authCode);
         session.setAttribute("expiredTime", expired);
         session.setAttribute("authCodeVerified", false);
 
         Map<String, Object> tplData = new HashMap<>();
-        tplData.put("authCode", autoCode);
+        tplData.put("authCode", authCode);
 
-        System.out.println(autoCode);
+        System.out.println(authCode);
 
         form.setTo(List.of(to));
         form.setSubject(subject);
@@ -79,7 +79,7 @@ public class EmailAuthService {
         if (authCode == null) {
             throw new BadRequestException();
         }
-
+        
         if (!code.equals(authCode)) { // 인증 코드가 일치하지 않는 경우
             throw new AuthCodeMismatchException();
         }
