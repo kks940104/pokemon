@@ -53,6 +53,8 @@ public class PokemonController {
         String pageTitle = utils.getMessage("포켓몬_도감");
 
         List<String> addCss = new ArrayList<>();
+        List<String> addCommonScript = new ArrayList<>();
+        addCommonScript.add("wish"); // 찜하기 기능 스크립트
         addCss.add("pokemon/style"); // 포켓몬 도감 페이지 공통 스타일(목록, 상세)
 
         if (mode.equals("list")) {
@@ -68,5 +70,6 @@ public class PokemonController {
 
         model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("addCss", addCss);
+        model.addAttribute("addCommonScript", addCommonScript);
     }
 }

@@ -10,6 +10,15 @@ commonLib.getMeta = function(mode) {
                         // 만약 el이 없으면 undefined 가 나옴.
 };
 /**
+* 자바스크립트 만든 주소에 컨텍스트 경로 추가.
+*
+*/
+
+commonLib.url = function(url) {
+    return `${commonLib.getMeta('rootUrl').replace("/","")}${url}`;
+}
+
+/**
 * Ajax 요청 처리0
 * @params url : 요청 주소, http[s] : 외부 URL - 컨택스트 경로는 추가 X
 * @params callback : 응답 완료 후 후속 처리 콜백 함수
