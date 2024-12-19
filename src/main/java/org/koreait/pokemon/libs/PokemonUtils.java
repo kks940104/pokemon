@@ -10,7 +10,8 @@ public class PokemonUtils {
 
     private static Map<String, String> colors = new HashMap<>();
     static {
-        colors.put("type1", "red");
+        colors.put("grass", "red");
+        colors.put("poison", "red");
     }
     public String getColorByType(String type) {
         return colors.get(type);

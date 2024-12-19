@@ -43,6 +43,7 @@
                         <td>
                             <th:block th:each="type : *{_types}">
                                 <div th:text="${#messages.msg(type)}"></div>
+                                <!--<td th:text="${@pUtils.getColorByType('grass')}"></td> 이걸 사용해서 특성에 맞게 색 뽑을 수 있음.-->
                             </th:block>
                         </td>
                     </tr>
