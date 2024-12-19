@@ -189,8 +189,15 @@ header .icon.search {
 
 header > .right {
   display: flex;
-  width: 520px;
+  width: 600px;
   justify-content: flex-end;
+}
+
+header > .xi-gamepad {
+  justify-content: center;
+    align-items: center;
+    width:500px
+    height:500px
 }
 
 header > .right > ul {
