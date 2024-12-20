@@ -5,12 +5,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.paging.CommonSearch;
+import org.koreait.global.paging.ListData;
+import org.koreait.global.paging.Pagination;
 import org.koreait.member.MemberInfo;
 import org.koreait.member.entities.Member;
 import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.MemberInfoService;
 import org.koreait.member.services.MemberUpdateService;
 import org.koreait.mypage.validators.ProfileValidator;
+import org.koreait.pokemon.controllers.PokemonSearch;
+import org.koreait.pokemon.entities.Pokemon;
+import org.koreait.pokemon.services.PokemonInfoService;
+import org.koreait.wishlist.constants.WishType;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,6 +30,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @ApplyErrorPage
@@ -36,6 +44,7 @@ public class MypageController {
     private final MemberUpdateService updateService;
     private final ProfileValidator profileValidator;
     private final MemberInfoService infoService;
+    private final PokemonInfoService pokemonInfoService;
 
     // 이 문제는 수정하게 된다면 수정이 되지 않음.
     // 그렇기에 사용하지 못하며, Session을 사용해야함.
@@ -110,6 +119,28 @@ public class MypageController {
     }
 
     /**
+     * 찜하기 목록
+     * @param mode : POKEMON : 포켓몬 찜하기 목록, BOARD : 게시글 찜하기 목록
+     * @return
+     */
+    @GetMapping({"/wishlist", "/wishlist/{mode}"})
+    public String wishlist(@PathVariable(name = "mode", required = false) WishType mode, CommonSearch search, Model model) {
+        commonProcess("wishlist", model);
+
+        mode = Objects.requireNonNullElse(mode, WishType.POKEMON);
+        if (mode == WishType.BOARD) { // 게시글 찜하기
+
+        } else {
+            PokemonSearch pSearch = modelMapper.map(search, PokemonSearch.class);
+            ListData<Pokemon> data = pokemonInfoService.getMyPokemons(pSearch);
+            model.addAttribute("items",data.getItems());
+            model.addAttribute("pagination",data.getPagination());
+        }
+
+        return utils.tpl("mypage/wishlist");
+    }
+
+    /**
      * 컨트롤러 공통 처리 영역
      * @param mode
      * @param model
@@ -127,6 +158,9 @@ public class MypageController {
             addCommonScript.add("address");
             addScript.add("mypage/profile");
             pageTitle = utils.getMessage("회원정보_수정");
+        } else if(mode.equals("wishlist")) { // 찜하기 목록
+            pageTitle = utils.getMessage("My_Wish");
+            addCommonScript.add("wish");
         }
 
         model.addAttribute("addCommonScript", addCommonScript);

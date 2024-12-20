@@ -29,7 +29,7 @@ public class ApiUpdateService {
      * @param page
      */
     public void update(int page) {
-        int limit = 50;
+        int limit = 100;
         int offset = (page - 1) * limit; // 시작 레코드 번호, 0, 100, ...
         String url = String.format("https://pokeapi.co/api/v2/pokemon?offset=%d&limit=%d",offset,limit);
 
