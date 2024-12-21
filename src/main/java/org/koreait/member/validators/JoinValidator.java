@@ -78,6 +78,8 @@ public class JoinValidator implements Validator, PasswordValidator {
          * 5. 이메일 인증 완료 여부 체크
          */
 
+
+        System.out.println("테스트");
         String email = form.getEmail();
         String password = form.getPassword();
         String confirmPassword = form.getConfirmPassword();

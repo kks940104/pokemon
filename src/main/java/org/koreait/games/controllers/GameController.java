@@ -1,13 +1,13 @@
 package org.koreait.games.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.koreait.games.services.ShadowGameService;
 import org.koreait.global.libs.Utils;
-import org.koreait.pokemon.repositories.PokemonRepository;
-import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
@@ -20,16 +20,20 @@ import java.util.List;
 public class GameController {
 
     private final Utils utils;
+    private final ShadowGameService shadowGameService;
 
-    private final PokemonInfoService pokemonInfoService;
-    private final PokemonRepository pokemonRepository;
+    @ModelAttribute("requestShadowGame")
+    public RequestShadowGame requestShadowGame() {
+        return new RequestShadowGame();
+    }
 
-    @GetMapping("/image")
+
+    @GetMapping("/shadowGame")
     public String shadowGame(Model model) {
-        Long count = pokemonRepository.count();
-        List<Long> seq = new ArrayList<>();
-        System.out.println(count);
-        return utils.tpl("game/image");
+        commonProcess("game", model);
+        List<Long> count = shadowGameService.pokemonCount();
+        model.addAttribute("pokemonCount", count);
+        return utils.tpl("game/shadowgame");
     }
 
     private void commonProcess(String mode, Model model) {

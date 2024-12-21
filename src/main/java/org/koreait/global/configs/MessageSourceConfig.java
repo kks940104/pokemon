@@ -16,7 +16,7 @@ public class MessageSourceConfig {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
-        ms.addBasenames("messages.commons", "messages.validations", "messages.errors", "messages.pokemon", "messages.pokemonVersion");
+        ms.addBasenames("messages.commons", "messages.validations", "messages.errors", "messages.pokemon", "messages.pokemonVersion","messages.pokemonGame");
         ms.setDefaultEncoding("UTF-8");
         ms.setUseCodeAsDefaultMessage(true); // 키와 값으로 저장. 만약 value값이 없을 경우 키값인 코드 형태로 출력. 만약 false로 하면 코드형태로 출력되지 않음.
 
