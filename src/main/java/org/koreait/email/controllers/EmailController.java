@@ -3,7 +3,6 @@ package org.koreait.email.controllers;
 import lombok.RequiredArgsConstructor;
 import org.koreait.email.exceptions.AuthCodeIssueException;
 import org.koreait.email.services.EmailAuthService;
-import org.koreait.global.rests.JSONData;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,0 +1,88 @@
+.game-background {
+    background: url("../../images/pokemon-game-background.jpg") no-repeat center center;
+    object-fit: fill;
+}
+
+.game-box{
+    padding: 20px 0;
+    width: max-content;
+    height: max-content;
+    margin: 0 auto;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.shadow-game {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 0 auto;
+    border-radius: 3px;
+}
+
+.game-setting{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+.game-setting .terms-check-all {
+    padding: 5px;
+    width: 50%;
+    font-size: 19px;
+    color: black;
+}
+
+.game-logo {
+    width: 600px;
+    height: 600px;
+}
+.game-right {
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.game-image {
+    width: 50%;
+    height: 300px;
+}
+
+.shadow-game .game-description {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+
+    font-size: 20px;
+}
+
+.game-button {
+    width: 100%;
+    height: 20%;
+}
+.game-start-btn {
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: 2px solid yellow;
+    background-color: yellow;;
+    color: black;
+    transition: all 0.2s ease-in-out;
+}
+
+
+.game-start-btn:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid yellow;
+    cursor: pointer;
+}

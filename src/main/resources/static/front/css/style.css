@@ -196,8 +196,8 @@ header > .right {
 header > .xi-gamepad {
   justify-content: center;
     align-items: center;
-    width:500px
-    height:500px
+    width:500px;
+    height:500px;
 }
 
 header > .right > ul {

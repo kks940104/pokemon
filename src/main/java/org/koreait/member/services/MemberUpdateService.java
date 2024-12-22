@@ -1,6 +1,9 @@
 package org.koreait.member.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.paging.ListData;
+import org.koreait.global.paging.Pagination;
 import org.koreait.member.constants.Authority;
 import org.koreait.member.controllers.RequestJoin;
 import org.koreait.member.entities.Authorities;
@@ -12,6 +15,9 @@ import org.koreait.member.reporitories.MemberRepository;
 import org.koreait.mypage.controllers.RequestProfile;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

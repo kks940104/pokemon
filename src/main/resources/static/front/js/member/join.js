@@ -2,7 +2,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const sendButton = document.getElementById("send-auth-code");
   const authCodeEl = document.getElementById("auth-code");
   const verifyButton = document.getElementById("verify-auth-code");
-  const timerEl = document.querySelector(".auth-box .timer");
+  const timerEl = document.querySelector(".game-right .timer");
   const { emailAuth } = commonLib;
 
   frmJoin.email.addEventListener("change", function () {
@@ -11,6 +11,10 @@ window.addEventListener("DOMContentLoaded", function () {
     } else {
       sendButton.disabled = true;
     }
+  });
+
+  frmJoin.addEventListener("keydown", function(e) {
+     if (e.key == "enter") e.preventDefault();
   });
 
   /* 인증코드 전송 버튼 처리 S */

@@ -81,11 +81,10 @@
                                     <td th:text="${#strings.concat('*',  ability.key)}"></td> <!-- 두가지의 조건을 거는법 알아보기. -->
                                     <td th:text="${abilityFlavorText.key}"></td>
                                 </th:block>
-                                <th:block th:unless="${abilityFlavorText.value}">
+                                <th:block th:if="${!abilityFlavorText.value}">
                                     <td th:text="${ability.key}"></td>
                                     <td th:text="${abilityFlavorText.key}"></td>
                                 </th:block>
-
                             </th:block>
                         </th:block>
                     </tr>

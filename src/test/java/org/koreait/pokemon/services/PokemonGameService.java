@@ -13,6 +13,6 @@ public class PokemonGameService {
 
     @Test
     void test1() {
-        System.out.println(shadowGameService.pokemonCount());
+        // System.out.println(shadowGameService.pokemonCount());
     }
 }
