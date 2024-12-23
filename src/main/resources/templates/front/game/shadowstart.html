@@ -2,7 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{front/layouts/main}">
-<main layout:fragment="content">
-    <h1>게임하는 영역</h1>
+<main layout:fragment="content" class="game-background">
+    <section class="details" th:object="${pokemon}">
+        <div class="back-image">
+
+        </div>
+    </section>
 </main>
 </html>

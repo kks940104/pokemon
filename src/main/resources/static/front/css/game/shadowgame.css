@@ -1,6 +1,8 @@
 .game-background {
     background: url("../../images/pokemon-game-background.jpg") no-repeat center center;
     object-fit: fill;
+    width: 100%;
+    height: 1080px;
 }
 
 .game-box{
@@ -13,7 +15,7 @@
 }
 
 .shadow-game {
-    padding: 20px;
+    padding-top: 200px;
     display: flex;
     flex-direction: row;
     gap: 10px;

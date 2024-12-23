@@ -2,6 +2,7 @@ package org.koreait.main.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.libs.Utils;
+import org.koreait.member.libs.MemberUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,10 @@ import java.util.List;
 public class MainController {
 
     private final Utils utils;
+    private final MemberUtil memberUtil;
 
     @GetMapping
     public String index(Model model) {
-
         return utils.tpl("main/index");
     }
 }

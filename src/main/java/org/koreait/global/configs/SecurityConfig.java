@@ -1,17 +1,25 @@
 package org.koreait.global.configs;
 
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.io.IOException;
 
 /**
  * 스프링 시큐리티 설정.
@@ -22,6 +30,9 @@ public class SecurityConfig {
 
     @Autowired
     private MemberInfoService memberInfoService;
+
+    @Autowired
+    private MemberUtil memberUtil;
 
     // 이 수동빈 정말 중요.
     @Bean
@@ -44,8 +55,11 @@ public class SecurityConfig {
          * 로그아웃 설정. 로그아웃 주소는 결정된게 아니기 때문에 따로 추가.
          */
         http.logout(c -> {
-            c.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout")).
-                    logoutSuccessUrl("/member/login");
+            c.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                    .logoutSuccessHandler((req,  res, auth) -> {
+                        memberUtil.setMember(null);
+                        res.sendRedirect(req.getContextPath() + "/member/login");
+            });
         });
 
         // endregion

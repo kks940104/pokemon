@@ -5,6 +5,7 @@ import org.koreait.games.services.ShadowGameService;
 import org.koreait.games.validators.ShadowGameValidators;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.pokemon.entities.Pokemon;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -29,10 +30,10 @@ public class GameController {
     private final ShadowGameService shadowGameService;
     private final ShadowGameValidators shadowGameValidators;
 
-    @ModelAttribute("addCss")
+/*    @ModelAttribute("addCss")
     public List<String> addCss() {
         return List.of("game/shadowgame");
-    }
+    }*/
 
     @ModelAttribute("requestShadowGame")
     public RequestShadowGame requestShadowGame() {
@@ -48,22 +49,36 @@ public class GameController {
 
     @PostMapping("/shadowstart")
     public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, Errors errors) {
-        commonProcess("game", model);
+        commonProcess("gamestart", model);
         shadowGameValidators.validate(form, errors);
 
-        List<Long> items = shadowGameService.pokemonCount(form);
+        form.setPokemonCount(shadowGameService.pokemonCount(form));
+        Pokemon pokemon = shadowGameService.findPokemon(form);
 
+        model.addAttribute("pokemon", pokemon);
+
+        return utils.tpl("game/shadowstart");
+    }
+
+    @GetMapping("shadowstart")
+    public String shadowStart(Model model) {
+        commonProcess("gamestart", model);
         return utils.tpl("game/shadowstart");
     }
 
     private void commonProcess(String mode, Model model) {
         mode = StringUtils.hasText(mode) ? mode : "game";
         String pageTitle = null; // 페이지 제목
+        List<String> addCss = new ArrayList<>();
         List<String> addCommonScript = new ArrayList<>(); // 공통 자바스크립트
         List<String> addScript = new ArrayList<>(); // 프론트쪽에 추가하는 자바 스크립트
         if (mode.equals("game")) {
+            addCss.add("game/shadowgame");
             pageTitle = "포켓몬 게임하기";
             addScript.add("game/shadowgame");
+        } else if (mode.equals("gamestart")) {
+            pageTitle = "포켓몬 게임시작";
+            addCss.add("game/shadowstart");
         }
 
         // 페이지 제목
@@ -74,5 +89,8 @@ public class GameController {
 
         // front 스크립트
         model.addAttribute("addScript", addScript);
+
+        // front Css
+        model.addAttribute("addCss", addCss);
     }
 }

@@ -8,10 +8,7 @@ import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -23,9 +20,6 @@ public class ShadowGameService {
     private final PokemonRepository pokemonRepository;
 
     public List<Long> pokemonCount(RequestShadowGame form) {
-
-
-
         List<Long> pokemonCounts = new ArrayList<>();
         for (int i = 0; i < form.getPokemonCheck().length; i++) {
             if (form.getPokemonCheck()[i]) {
@@ -50,5 +44,11 @@ public class ShadowGameService {
         }
 
         return pokemonCounts;
+    }
+
+    public Pokemon findPokemon(RequestShadowGame form) {
+        Random random = new Random();
+        int checkQuiz = random.nextInt(form.getPokemonCount().size());
+        return pokemonInfoService.get(form.getPokemonCount().remove(checkQuiz));
     }
 }
