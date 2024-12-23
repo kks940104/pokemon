@@ -169,7 +169,7 @@ public class ApiUpdateService {
 
             Map<String, String> flavorTexts = data2.getFlavorTextEntries().stream()
                     .filter(d -> d.getLanguage().getName().equals("ko"))
-                    .collect(Collectors.toMap(d -> d.getVersion().getName(), d -> d.getFlavorText(), (p1, p2) -> p2));
+                    .collect(Collectors.toMap(d -> d.getVersion().getName(), FlavorText::getFlavorText, (p1, p2) -> p2));
 
 
             try {
@@ -194,6 +194,8 @@ public class ApiUpdateService {
 
         }
         // endregion
+
+        System.out.println(pokemons);
 
         repository.saveAllAndFlush(pokemons);
     }
