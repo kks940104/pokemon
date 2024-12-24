@@ -4,6 +4,7 @@ package org.koreait.global.configs;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.*;
@@ -32,7 +33,7 @@ public class SecurityConfig {
     private MemberInfoService memberInfoService;
 
     @Autowired
-    private MemberUtil memberUtil;
+    private HttpSession session;
 
     // 이 수동빈 정말 중요.
     @Bean
@@ -54,12 +55,17 @@ public class SecurityConfig {
         /**
          * 로그아웃 설정. 로그아웃 주소는 결정된게 아니기 때문에 따로 추가.
          */
-        http.logout(c -> {
+/*        http.logout(c -> {
             c.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                     .logoutSuccessHandler((req,  res, auth) -> {
-                        memberUtil.setMember(null);
+                        session.setAttribute("member", null);
                         res.sendRedirect(req.getContextPath() + "/member/login");
             });
+        });*/
+
+        http.logout(c -> {
+            c.logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                    .logoutSuccessUrl("/member/login");
         });
 
         // endregion

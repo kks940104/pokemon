@@ -1,5 +1,6 @@
 package org.koreait.member.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -158,9 +159,9 @@ public class MemberController {
     @GetMapping("/refresh")
     // SecurityConfig 내에  EnableMethodSecurity 추가. 실행하기전에 권한 확인. 만약 권한이 맞지 않으면 Exception으로 넘김.
     @PreAuthorize("isAuthenticated()")
-    public void refresh(Principal principal) {
+    public void refresh(Principal principal, HttpSession session) {
         MemberInfo memberInfo = (MemberInfo) infoService.loadUserByUsername(principal.getName());
-        memberUtil.setMember(memberInfo.getMember());
+        session.setAttribute("member", memberInfo.getMember());
     }
 
 
