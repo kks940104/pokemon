@@ -52,14 +52,12 @@ commonLib.ajaxLoad = function (url, callback, method = "GET", data, headers) {
   return new Promise((resolve, reject) => {
     fetch(url, options)
       .then((res) => {
-        console.log("res", res);
         if (res.status !== 204) return res.json();
         else {
           resolve();
         }
       })
       .then((json) => {
-        console.log("json", json);
         if (json?.success) {
           // 응답 성공했을 때(처리 성공)
           if (typeof callback === "function") {
@@ -98,13 +96,18 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  const checkBoxes = document.getElementsByClassName("terms");
+  const checkBoxes = document.getElementsByClassName("chk");
+  const parent = document.getElementById("check-all");
   for (const checkBox of checkBoxes) {
     checkBox.addEventListener("click", function () {
       if (!checkBox.checked) {
-        const parent = document.getElementsByClassName("check-all");
         parent.checked = false;
         return;
+      }
+      for (const check of checkBoxes) {
+        if (check.checked) {
+          parent.checked = true;
+        }
       }
     });
   }

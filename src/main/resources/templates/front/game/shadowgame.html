@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{front/layouts/main}">
 <main layout:fragment="content" class="game-background">
+        <div class="game-left-image"></div>
         <form name="frmGameStart" class="game-box" method="POST" th:action="@{/game/shadowstart}" autocomplete="off" th:object="${requestShadowGame}">
             <section class="shadow-game">
                 <div class="pokemon-image game-left">
@@ -12,52 +13,34 @@
                     <div class="game-setting">
                         <div class="game-image" th:text="#{게임이미지}"></div>
                         <div class="terms-check-all">
-                            <input type="checkbox" class="pk-check-all" data-target-class="pk-terms" id="check-all">
-                            <label for="check-all" th:text="#{전체선택}"></label>
                             <ul>
                                 <li>
-                                    <input type="checkbox" name="requiredTerms1" value="true" th:field="*{pokemonCheck[0]}" id="requiredTerms0" class="pk-terms">
-                                    <label for="requiredTerms0" th:text="${#messages.msg('1세대')}"></label>
+                                    <input type="radio" name="option" value="386" th:field="*{pokemonCheck}" id="requiredTerms0" class="radio-game">
+                                    <label for="requiredTerms0" th:text="${#messages.msg('하')}"></label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="requiredTerms2" value="true" th:field="*{pokemonCheck[1]}" id="requiredTerms1" class="pk-terms">
-                                    <label for="requiredTerms1" th:text="${#messages.msg('2세대')}"></label>
+                                    <input type="radio" name="option" value="649" th:field="*{pokemonCheck}" id="requiredTerms1" class="radio-game">
+                                    <label for="requiredTerms1" th:text="${#messages.msg('중')}"></label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="requiredTerms3" value="true" th:field="*{pokemonCheck[2]}" id="requiredTerms2" class="pk-terms">
-                                    <label for="requiredTerms2" th:text="${#messages.msg('3세대')}"></label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="optionalTerms" value="advertisement" th:field="*{pokemonCheck[3]}" id="requiredTerms3" class="pk-terms">
-                                    <label for="requiredTerms3" th:text="${#messages.msg('4세대')}"></label>
-
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="requiredTerms1" value="true" th:field="*{pokemonCheck[4]}" id="requiredTerms4" class="pk-terms">
-                                    <label for="requiredTerms4" th:text="${#messages.msg('5세대')}"></label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="requiredTerms2" value="true" th:field="*{pokemonCheck[5]}" id="requiredTerms5" class="pk-terms">
-                                    <label for="requiredTerms5" th:text="${#messages.msg('6세대')}"></label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="requiredTerms3" value="true" th:field="*{pokemonCheck[6]}" id="requiredTerms6" class="pk-terms">
-                                    <label for="requiredTerms6" th:text="${#messages.msg('7세대')}"></label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="optionalTerms" value="advertisement" th:field="*{pokemonCheck[7]}" id="requiredTerms7" class="pk-terms">
-                                    <label for="requiredTerms7" th:text="${#messages.msg('8세대')}"></label>
+                                    <input type="radio" name="option" value="898" th:field="*{pokemonCheck}" id="requiredTerms2" class="radio-game">
+                                    <label for="requiredTerms2" th:text="${#messages.msg('상')}"></label>
                                 </li>
                             </ul>
                             <span class="pokemonCount">0마리</span>
                         </div>
                     </div>
-                    <div th:text=#{설명} class="game-description"></div>
+                    <div class="game-description">
+                        <div class="description-name">설명</div>
+                        <div class="description-content1" th:text="${#messages.msg('설명')}"></div>
+                        <div class="description-content2" id="description-content">위의 항목을 체크해주세요.</div>
+                    </div>
                     <div class="game-button">
                         <button class="game-start-btn" type="submit" th:text="#{게임시작}"></button>
                     </div>
                 </div>
             </section>
         </form>
+        <div class="game-right-image"></div>
 </main>
 </html>

@@ -9,5 +9,8 @@ public class RequestShadowGame {
 
     private List<Long> pokemonCount;
 
-    private boolean[] pokemonCheck = new boolean[8];
+    private int pokemonCheck;
+    private boolean row;
+    private boolean mid;
+    private boolean high;
 }

@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -50,12 +48,14 @@ public class GameController {
     @PostMapping("/shadowstart")
     public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, Errors errors) {
         commonProcess("gamestart", model);
+        System.out.println(form);
         shadowGameValidators.validate(form, errors);
 
         form.setPokemonCount(shadowGameService.pokemonCount(form));
         Pokemon pokemon = shadowGameService.findPokemon(form);
 
         model.addAttribute("pokemon", pokemon);
+        System.out.println(pokemon);
 
         return utils.tpl("game/shadowstart");
     }
@@ -79,6 +79,7 @@ public class GameController {
         } else if (mode.equals("gamestart")) {
             pageTitle = "포켓몬 게임시작";
             addCss.add("game/shadowstart");
+            addScript.add("game/shadowstart");
         }
 
         // 페이지 제목

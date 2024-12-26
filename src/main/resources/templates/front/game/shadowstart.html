@@ -4,8 +4,14 @@
       layout:decorate="~{front/layouts/main}">
 <main layout:fragment="content" class="game-background">
     <section class="details" th:object="${pokemon}">
-        <div class="back-image">
-
+        <div class="game-box">
+            <div id="pokemon-image" class="pokemon-image" ondragstart="return false"
+                 oncontextmenu="return false">
+                <th:block th:utext="*{@utils.showImage(frontImage, 390, 390, 'image')}"></th:block>
+            </div>
+            <th:block th:each="type : *{_types}">
+                <div class="types" th:text="${#messages.msg(type)}"></div>
+            </th:block>
         </div>
     </section>
 </main>

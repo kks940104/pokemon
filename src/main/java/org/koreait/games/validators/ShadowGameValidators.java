@@ -18,12 +18,9 @@ public class ShadowGameValidators implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         RequestShadowGame request = (RequestShadowGame) target;
-        boolean[] valid = request.getPokemonCheck();
-        for (int i = 0; i < valid.length; i++) {
-            if (valid[i]) {
-                return;
-            }
+
+        if (request.getPokemonCheck() <= 0) {
+            throw new SelectCheckException();
         }
-        throw new SelectCheckException();
     }
 }

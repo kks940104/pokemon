@@ -1,12 +1,23 @@
 .game-background {
     width: 100%;
     height: 880px;
+    background: #BBC5BC;
 }
 
+.game-box{
+    padding: 20px 0;
+    width: max-content;
+    height: max-content;
+    margin: 0 auto;
+    font-weight: normal;
+    font-style: normal;
+    border: 1px solid black;
+    border-radius: 3px;
+    display: flex;
+    background: #EAE4E4;
+    flex-direction: column;
+}
 
-.back-image{
-    background-image: url("../../images/nintendo.png");
-    width: 863px;
-    height: 780px;
-    background-size: cover;
+.image {
+    filter: brightness(2%);
 }
