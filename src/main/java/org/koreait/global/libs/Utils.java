@@ -182,6 +182,14 @@ public class Utils {
         HttpSession session = request.getSession();
         session.removeAttribute("showMessage");
     }
+
+    public String getParam(String name) {
+        return request.getParameter(name);
+    }
+
+    public String[] getParams(String name) {
+        return request.getParameterValues(name);
+    }
 }
 
 
