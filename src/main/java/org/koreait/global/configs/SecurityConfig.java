@@ -114,6 +114,8 @@ public class SecurityConfig {
 
         // endregion
 
+        http.headers(c -> c.frameOptions(o -> o.sameOrigin()));
+
         return http.build();
     }
 

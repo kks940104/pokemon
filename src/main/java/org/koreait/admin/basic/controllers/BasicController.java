@@ -2,6 +2,8 @@ package org.koreait.admin.basic.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.koreait.admin.basic.services.TermsInfoService;
+import org.koreait.admin.basic.services.TermsUpdateService;
 import org.koreait.admin.global.menu.MenuDetail;
 import org.koreait.admin.global.menu.Menus;
 import org.koreait.global.annotations.ApplyErrorPage;
@@ -24,8 +26,14 @@ import java.util.Objects;
 @RequestMapping("/admin/basic")
 public class BasicController {
 
+    // region 의존성 주입
+
     private final CodeValueService codeValueService;
+    private final TermsUpdateService termsUpdateService;
     private final Utils utils;
+    private final TermsInfoService termsInfoService;
+
+    // endregion
 
     @ModelAttribute("menuCode")
     public String menuCode() {
@@ -86,6 +94,8 @@ public class BasicController {
     @GetMapping("/terms")
     public String terms(@ModelAttribute Terms form, Model model) {
         commonProcess("terms", model);
+        List<Terms> items = termsInfoService.getList();
+        model.addAttribute("items", items);
         return "admin/basic/terms";
     }
     /**
@@ -101,10 +111,16 @@ public class BasicController {
         if (errors.hasErrors()) {
             return "admin/basic/terms";
         }
-        return "admin/basic/terms"; // 임시....
+
+        termsUpdateService.save(form);
+
+        model.addAttribute("script", "parent.location.reload();");
+        return "common/_execute_script"; // 임시....
     }
 
     // endregion
+
+    // region 기본 설정 공통 처리
 
     /**
      * 기본 설정 공통 처리 부분
@@ -126,6 +142,8 @@ public class BasicController {
         model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("subMenuCode", mode);
     }
+
+    // endregion
 }
 
 
