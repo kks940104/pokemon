@@ -2,6 +2,7 @@ package org.koreait.games.services;
 
 import lombok.RequiredArgsConstructor;
 import org.koreait.games.controllers.RequestShadowGame;
+import org.koreait.global.libs.Utils;
 import org.koreait.pokemon.entities.Pokemon;
 import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.stream.LongStream;
 public class ShadowGameService {
 
     private final PokemonInfoService pokemonInfoService;
+    private final Utils utils;
 
     public List<Long> pokemonCount(RequestShadowGame form) {
         List<Long> pokemonCounts = new ArrayList<>();
@@ -52,5 +54,11 @@ public class ShadowGameService {
         Random random = new Random();
         int checkQuiz = random.nextInt(form.getPokemonCount().size());
         return pokemonInfoService.get(form.getPokemonCount().remove(checkQuiz));
+    }
+
+    public String getFlavors(Pokemon pokemon) {
+        List<String> flavors = new ArrayList<>(pokemon.get_flavorText().values());
+
+        return flavors == null ? "" : utils.nl2br(flavors.get(0));
     }
 }

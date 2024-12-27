@@ -9,9 +9,15 @@
                  oncontextmenu="return false">
                 <th:block th:utext="*{@utils.showImage(frontImage, 390, 390, 'image')}"></th:block>
             </div>
-            <th:block th:each="type : *{_types}">
-                <div class="types" th:text="${#messages.msg(type)}"></div>
+            <div class="game-type">
+                <th:block th:each="type : *{_types}">
+                    <div class="types" th:text="${#messages.msg(type)}"></div>
+                </th:block>
+            </div>
+            <th:block th:if="${requestShadowGame.mid || requestShadowGame.row}">
+                <div th:utext="*{gameFlavorText}"></div>
             </th:block>
+            <div th:text="*{seq}"></div>
         </div>
     </section>
 </main>

@@ -6,7 +6,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
   const checked = document.getElementsByClassName("radio-game");
   const content = document.getElementById("description-content");
-  checked.checked = true;
+  const firstChecked = document.getElementById("requiredTerms0");
+  firstChecked.checked = true;
+  content.innerText = "그림자이미지, 타입, 설명, 도감번호가 나옵니다!";
   for (const element of checked) {
     element.addEventListener("click", function () {
       if (element.checked) {

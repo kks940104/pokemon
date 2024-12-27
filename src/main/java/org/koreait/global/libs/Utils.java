@@ -197,8 +197,9 @@ public class Utils {
      * @return
      */
     public String nl2br(String text) {
-        return text.replaceAll("\\r", "")
+        text =  text.replaceAll("\\r", "")
                 .replaceAll("\\n", "<br>");
+        return text;
     }
 }
 

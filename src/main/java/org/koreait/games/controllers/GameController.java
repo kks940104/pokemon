@@ -48,15 +48,11 @@ public class GameController {
     @PostMapping("/shadowstart")
     public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, Errors errors) {
         commonProcess("gamestart", model);
-        System.out.println(form);
-        shadowGameValidators.validate(form, errors);
-
-        form.setPokemonCount(shadowGameService.pokemonCount(form));
-        Pokemon pokemon = shadowGameService.findPokemon(form);
-
+        shadowGameValidators.validate(form, errors); // check됬는지 확인
+        form.setPokemonCount(shadowGameService.pokemonCount(form)); // 상중하 골라서 count check
+        Pokemon pokemon = shadowGameService.findPokemon(form); // 포켓몬 뽑기
+        pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon));
         model.addAttribute("pokemon", pokemon);
-        System.out.println(pokemon);
-
         return utils.tpl("game/shadowstart");
     }
 
