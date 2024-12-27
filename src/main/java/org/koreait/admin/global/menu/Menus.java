@@ -18,12 +18,12 @@ public class Menus {
 
         //회원 관리
         submenus.put("member", List.of(
-                new MenuDetail("List", "회원목록", "/admin/member/list")
+                new MenuDetail("list", "회원목록", "/admin/member/list")
         ));
 
         //게시판 관리
         submenus.put("board", List.of(
-                new MenuDetail("List", "게시판목록", "/admin/board/list"),
+                new MenuDetail("list", "게시판목록", "/admin/board/list"),
                 new MenuDetail("add", "게시판등록", "/admin/board/add"),
                 new MenuDetail("posts", "게시판관리", "/admin/board/posts")
         ));

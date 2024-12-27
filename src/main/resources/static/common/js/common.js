@@ -80,6 +80,10 @@ commonLib.ajaxLoad = function (url, callback, method = "GET", data, headers) {
       });
   }); // 반환값을 Promise로....
 };
+// isAjax가 false면 item, isAjax가 true면 Ajax로
+commonLib.popup = function(url, width = 350, height = 350, isAjax = false) {
+
+}
 
 window.addEventListener("DOMContentLoaded", function () {
   // 체크박스 전체 토글 기능 S
