@@ -2,7 +2,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const sendButton = document.getElementById("send-auth-code");
   const authCodeEl = document.getElementById("auth-code");
   const verifyButton = document.getElementById("verify-auth-code");
-  const timerEl = document.querySelector(".game-right .timer");
+  const timerEl = document.querySelector(".timer");
   const { emailAuth } = commonLib;
 
   frmJoin.email.addEventListener("change", function () {
