@@ -3,7 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{front/layouts/main}">
 <main layout:fragment="content" class="game-background">
-    <section class="details" th:object="${pokemon}">
+    <section class="details">
+        <form name="frmJoin" method="POST" th:action="@{/game/shadowstart_ps}" autocomplete="off" th:object="${pokemon}">
         <div class="game-box">
             <div id="pokemon-image" class="pokemon-image" ondragstart="return false"
                  oncontextmenu="return false">
@@ -11,14 +12,20 @@
             </div>
             <div class="game-type">
                 <th:block th:each="type : *{_types}">
-                    <div class="types" th:text="${#messages.msg(type)}"></div>
+                    <div th:class="${type}" th:classappend="types" th:text="${#messages.msg(type)}"></div>
                 </th:block>
             </div>
             <th:block th:if="${requestShadowGame.mid || requestShadowGame.row}">
-                <div th:utext="*{gameFlavorText}"></div>
+                <div class="game-flavor" th:utext="*{gameFlavorText}"></div>
             </th:block>
-            <div th:text="*{seq}"></div>
+            <div class="game-seq" th:text="*{#strings.concat('도감번호 : ', seq, '번')}"></div>
+            <div class="game-answer">
+                <input type="text" id="game-answer" th:field="${requestShadowGame.pokemonName}" th:placeholder="#{어떤 포켓몬일까요?}">
+                <label for="game-answer"></label>
+                <button class="game-button" type="submit" th:text="#{정답}"></button>
+            </div>
         </div>
+        </form>
     </section>
 </main>
 </html>

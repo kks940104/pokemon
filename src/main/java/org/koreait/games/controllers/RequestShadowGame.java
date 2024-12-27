@@ -13,4 +13,6 @@ public class RequestShadowGame {
     private boolean row;
     private boolean mid;
     private boolean high;
+
+    private String pokemonName;
 }

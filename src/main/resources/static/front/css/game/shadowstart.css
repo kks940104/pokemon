@@ -16,8 +16,76 @@
     display: flex;
     background: #EAE4E4;
     flex-direction: column;
+    gap: 10px;
 }
 
 .image {
     filter: brightness(2%);
+}
+
+/* type box style S */
+
+.bug { background-color: #9fa244; }
+.water { background-color: #5185c5; }
+.psychic { background-color: #dd6b7b; }
+.grass { background-color: #66a945; }
+.flying { background-color: #a2c3e7; }
+.ground { background-color: #9c7743; }
+.rock { background-color: #bfb889; }
+.steel { background-color: #69a9c7; }
+.fighting { background-color: #e09c40; }
+.dark { background-color: #4c4948; }
+.ice { background-color: #6dc8eb; }
+.normal { background-color: #949495; }
+.poison { background-color: #735198; }
+.fairy { background-color: #dab4d4; }
+.fire { background-color: #e56c3e; }
+.dragon { background-color: #535ca8; }
+.electric { background-color: #f6d851; }
+.ghost { background-color: #684870; }
+
+.game-type {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+}
+
+.game-type .types {
+    width: 50px;
+    height: 30px;
+    line-height: 29px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+/* type box style E */
+
+/* game flavor style S */
+
+.game-flavor {
+    text-align: center;
+}
+
+/* game flavor style E */
+
+.game-seq {
+    text-align: center;
+}
+
+.game-answer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+}
+
+.game-button {
+    width: 50px;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid black;
+    background: white;
+    cursor: pointer;
 }
