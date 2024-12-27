@@ -128,8 +128,8 @@ public class MemberInfoService implements UserDetailsService {
         List<Authority> authorities = search.getAuthority();
         if (authorities != null && !authorities.isEmpty()) {
 /*            List<Authorities> _authorities = authorities.stream()
-                            .map(a -> )
-            andBuilder.and(member.authorities)*/
+                            .map(a -> )*/
+            andBuilder.and(member.authorities.any().authority.in(authorities));
         }
 
         // endregion
