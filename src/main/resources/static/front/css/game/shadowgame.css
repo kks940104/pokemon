@@ -89,6 +89,7 @@
 }
 .game-description .description-content2 {
     flex-grow: 7;
+    text-align: center;
 }
 
 

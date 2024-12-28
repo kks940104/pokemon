@@ -34,12 +34,10 @@ public class JoinValidator implements Validator, PasswordValidator {
         // 커맨드 객체 검증 실패시에는 추가 검증은 진행 X
         // MemberController.joinPS(@Valid RequestJoin form)
         if (errors.hasErrors()) {
-
             return;
         }
 
         if (target instanceof RequestJoin requestJoin) {
-
             validateJoin(requestJoin, errors);
         } else {
             validateAgree((RequestAgree) target, errors);

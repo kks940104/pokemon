@@ -8,24 +8,24 @@ window.addEventListener("DOMContentLoaded", function () {
   const content = document.getElementById("description-content");
   const firstChecked = document.getElementById("requiredTerms0");
   firstChecked.checked = true;
-  content.innerText = "그림자이미지, 타입, 설명, 도감번호가 나옵니다!";
+  content.innerText = "총 20문제입니다! \n 그림자이미지, 타입, 설명, 도감번호가 나옵니다!";
   for (const element of checked) {
     element.addEventListener("click", function () {
       if (element.checked) {
         if (element.id === "requiredTerms0") {
           // 3세대
           count = 386;
-          content.innerText = "그림자이미지, 타입, 설명, 도감번호가 나옵니다!";
+          content.innerText = "총 20문제입니다! \n 그림자이미지, 타입, 설명, 도감번호가 나옵니다!";
         }
         if (element.id === "requiredTerms1") {
           // 5세대
           count = 649;
-          content.innerText = "그림자이미지, 타입, 설명이 나옵니다!";
+          content.innerText = "총 20문제입니다! \n 그림자이미지, 타입, 설명이 나옵니다!";
         }
         if (element.id === "requiredTerms2") {
           // 8세대
           count = 898;
-          content.innerText = "그림자이미지, 타입이 나옵니다!";
+          content.innerText = "총 20문제입니다! \n 그림자이미지, 타입이 나옵니다!";
         }
       }
       checkView.innerHTML = String(count + "마리");

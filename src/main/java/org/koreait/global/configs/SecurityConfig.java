@@ -1,26 +1,17 @@
 package org.koreait.global.configs;
 
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.io.IOException;
 
 /**
  * 스프링 시큐리티 설정.
@@ -87,6 +78,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(c -> {
             c.requestMatchers("/mypage/**").authenticated() // 인증한 회원
+                    .requestMatchers("/game/**").authenticated() // 게임도 인증한 회원만 가능.
                     .requestMatchers("/member/login", "/member/join", "/member/agree").anonymous() // 미인증 회원
                     .requestMatchers("/admin/**").hasAnyAuthority("MANAGER", "ADMIN") // 관리자 페이지는 MANAGER, ADMIN 권한
                     .anyRequest().permitAll(); // 나머지 페이지는 모두 접근 가능

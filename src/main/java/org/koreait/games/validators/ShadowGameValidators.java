@@ -1,7 +1,9 @@
 package org.koreait.games.validators;
 
+import lombok.AllArgsConstructor;
 import org.koreait.games.controllers.RequestShadowGame;
-import org.koreait.games.exceptions.SelectCheckException;
+import org.koreait.pokemon.entities.Pokemon;
+import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -9,7 +11,12 @@ import org.springframework.validation.Validator;
 
 @Lazy
 @Component
+@AllArgsConstructor
 public class ShadowGameValidators implements Validator {
+
+
+    private final PokemonInfoService pokemonInfoService;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(RequestShadowGame.class);
@@ -18,9 +25,8 @@ public class ShadowGameValidators implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         RequestShadowGame request = (RequestShadowGame) target;
-
-        if (request.getPokemonCheck() <= 0) {
-            throw new SelectCheckException();
+        if(request.getGameCount() >= 20) {
+            errors.rejectValue("gameCount", "error.shadowGame");
         }
     }
 }

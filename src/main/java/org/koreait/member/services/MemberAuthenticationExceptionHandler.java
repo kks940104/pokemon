@@ -19,6 +19,8 @@ public class MemberAuthenticationExceptionHandler implements AuthenticationEntry
         String uri = request.getRequestURI(); // 요청 주소
         if (uri.contains("/mypage")) { // 마이페이지
             response.sendRedirect(request.getContextPath() + "/member/login?redirect=/mypage");
+        } else if (uri.contains("/game")) { // 마이페이지
+            response.sendRedirect(request.getContextPath() + "/member/login?redirect=/game");
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED); // 그외 401
         }

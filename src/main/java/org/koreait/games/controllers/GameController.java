@@ -1,5 +1,6 @@
 package org.koreait.games.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.games.services.ShadowGameService;
 import org.koreait.games.validators.ShadowGameValidators;
@@ -10,10 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +21,11 @@ import java.util.List;
 @ApplyErrorPage
 @RequiredArgsConstructor
 @RequestMapping("/game")
+@SessionAttributes("requestShadowGame")
 public class GameController {
 
     private final Utils utils;
+    private final HttpServletRequest request;
     private final ShadowGameService shadowGameService;
     private final ShadowGameValidators shadowGameValidators;
 
@@ -45,21 +46,36 @@ public class GameController {
         return utils.tpl("game/shadowgame");
     }
 
-    @PostMapping("/shadowstart")
-    public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, Errors errors) {
+    @RequestMapping(path="/shadowstart", method={RequestMethod.POST, RequestMethod.GET})
+    public String shadowStart(@ModelAttribute RequestShadowGame form, Model model) {
         commonProcess("gamestart", model);
-        shadowGameValidators.validate(form, errors); // check됬는지 확인
-        form.setPokemonCount(shadowGameService.pokemonCount(form)); // 상중하 골라서 count check
+        String message = request.getMethod().toLowerCase();
+        if(message.equals("post")) {
+            form.setPokemonCount(shadowGameService.pokemonGameSetting(form)); // 상중하 골라서 count check
+        }
         Pokemon pokemon = shadowGameService.findPokemon(form); // 포켓몬 뽑기
-        pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon));
+        pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon)); // 설명넣기
         model.addAttribute("pokemon", pokemon);
         return utils.tpl("game/shadowstart");
     }
-
-    @GetMapping("shadowstart")
+/*
+    @GetMapping("/shadowstart") // 포켓몬 맞추고 난 후
     public String shadowStart(Model model) {
         commonProcess("gamestart", model);
         return utils.tpl("game/shadowstart");
+    }*/
+
+    @PostMapping("/shadowstart_ps")
+    public String shadowStart_ps(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors) {
+        commonProcess("gamestart", model);
+        shadowGameValidators.validate(form, errors);
+
+        shadowGameService.validatePokemon(form);
+        if (errors.hasErrors()) {
+            status.setComplete();
+            return utils.tpl("game/shadowstart_ps");
+        }
+        return utils.tpl("game/shadowstart_ps");
     }
 
     private void commonProcess(String mode, Model model) {

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.games.controllers.RequestShadowGame;
 import org.koreait.global.libs.Utils;
 import org.koreait.pokemon.entities.Pokemon;
+import org.koreait.pokemon.repositories.PokemonRepository;
 import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,11 @@ public class ShadowGameService {
     private final PokemonInfoService pokemonInfoService;
     private final Utils utils;
 
-    public List<Long> pokemonCount(RequestShadowGame form) {
+    public List<Long> pokemonGameSetting(RequestShadowGame form) {
         List<Long> pokemonCounts = new ArrayList<>();
+        form.setGameCorrectAnswer(0);
+        form.setGameWrongAnswer(0);
+        form.setGameCount(0);
 
         if(form.getPokemonCheck() == 386) {
             Collections.addAll(pokemonCounts,LongStream.range(1L, 387L).boxed().toArray(Long[]::new));
@@ -53,6 +57,7 @@ public class ShadowGameService {
     public Pokemon findPokemon(RequestShadowGame form) {
         Random random = new Random();
         int checkQuiz = random.nextInt(form.getPokemonCount().size());
+        form.setGamePokemonIndex(checkQuiz + 1L);
         return pokemonInfoService.get(form.getPokemonCount().remove(checkQuiz));
     }
 
@@ -61,4 +66,53 @@ public class ShadowGameService {
 
         return flavors == null ? "" : utils.nl2br(flavors.get(0));
     }
+
+    public void validatePokemon(RequestShadowGame form) {
+        form.setGameQuizAnswer(false);
+        if (form.getGameCount() != 20) {
+            form.setGameCount(form.getGameCount() + 1);
+        }
+        Pokemon pokemon = pokemonInfoService.get(form.getGamePokemonIndex());
+        if (pokemon.getName().equals(form.getPokemonName())) {
+            form.setGameQuizAnswer(true);
+            form.setGameCorrectAnswer(form.getGameCorrectAnswer() + 1);
+        } else {
+            form.setGameWrongAnswer(form.getGameWrongAnswer() + 1);
+        }
+        form.setPokemonName(null);
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
