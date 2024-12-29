@@ -7,6 +7,7 @@ import org.koreait.games.validators.ShadowGameValidators;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
 import org.koreait.pokemon.entities.Pokemon;
+import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,6 +29,7 @@ public class GameController {
     private final HttpServletRequest request;
     private final ShadowGameService shadowGameService;
     private final ShadowGameValidators shadowGameValidators;
+    private final PokemonInfoService pokemonInfoService;
 
 /*    @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -47,14 +49,20 @@ public class GameController {
     }
 
     @RequestMapping(path="/shadowstart", method={RequestMethod.POST, RequestMethod.GET})
-    public String shadowStart(@ModelAttribute RequestShadowGame form, Model model) {
+    public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors) {
         commonProcess("gamestart", model);
         String message = request.getMethod().toLowerCase();
+        shadowGameValidators.validate(form, errors);
+        if (errors.hasErrors()) {
+            status.setComplete();
+            return utils.tpl(request.getContextPath() + "main/index");
+        }
         if(message.equals("post")) {
             form.setPokemonCount(shadowGameService.pokemonGameSetting(form)); // 상중하 골라서 count check
         }
         Pokemon pokemon = shadowGameService.findPokemon(form); // 포켓몬 뽑기
         pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon)); // 설명넣기
+        form.setGameBtnClick(false);
         model.addAttribute("pokemon", pokemon);
         return utils.tpl("game/shadowstart");
     }
@@ -66,15 +74,12 @@ public class GameController {
     }*/
 
     @PostMapping("/shadowstart_ps")
-    public String shadowStart_ps(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors) {
+    public String shadowStart_ps(@ModelAttribute RequestShadowGame form, Model model) {
         commonProcess("gamestart", model);
-        shadowGameValidators.validate(form, errors);
-
         shadowGameService.validatePokemon(form);
-        if (errors.hasErrors()) {
-            status.setComplete();
-            return utils.tpl("game/shadowstart_ps");
-        }
+        Pokemon pokemon = form.getGamePokemon();
+        pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon)); // 설명넣기
+        model.addAttribute("pokemon", pokemon);
         return utils.tpl("game/shadowstart_ps");
     }
 

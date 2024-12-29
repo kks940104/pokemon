@@ -6,7 +6,7 @@
 
 .game-box{
     padding: 20px 0;
-    width: max-content;
+    width: 600px;
     height: max-content;
     margin: 0 auto;
     font-weight: normal;
@@ -18,9 +18,35 @@
     flex-direction: column;
     gap: 10px;
 }
+.game-count {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+}
+.quiz-box {
+    height: 30px;
+    width: 100px;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 3px;
+    margin-right: 10px;
+    box-shadow: 5px 5px 3px #666
+}
+
+.pokemon-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .image {
     filter: brightness(2%);
+}
+
+
+.details {
+    padding-top: 50px;
 }
 
 /* type box style S */
@@ -64,15 +90,17 @@
 
 /* game flavor style S */
 
-.game-flavor {
+.game-flavor, .game-seq, .game-pokemon-name, .game-pokemon-quiz-check {
+
+    font-size: 1.5rem;
     text-align: center;
+}
+.game-pokemon-quiz-check {
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 /* game flavor style E */
-
-.game-seq {
-    text-align: center;
-}
 
 .game-answer {
     display: flex;

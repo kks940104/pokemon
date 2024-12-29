@@ -3,6 +3,37 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{front/layouts/main}">
 <main layout:fragment="content" class="game-background">
-    <h1>안녕</h1>
+    <section class="details">
+        <form name="frmGame" method="GET" th:action="@{/game/shadowstart}" autocomplete="off" th:object="${pokemon}">
+            <div class="game-box">
+                <div class="game-count">
+                    <span class="quiz-box" th:text="${#strings.concat('총 문제 20 / ', requestShadowGame.gameCount)}"></span>
+                    <span class="quiz-box" th:text="${#strings.concat('정답 개수 : ', requestShadowGame.gameCorrectAnswer)}"></span>
+                    <span class="quiz-box" th:text="${#strings.concat('오답 개수 : ', requestShadowGame.gameWrongAnswer)}"></span>
+                </div>
+                <div id="pokemon-image" class="pokemon-image" ondragstart="return false"
+                     oncontextmenu="return false">
+                    <th:block th:utext="*{@utils.showImage(frontImage, 390, 390, 'image-ps')}"></th:block>
+                </div>
+                <div class="game-type">
+                    <th:block th:each="type : *{_types}">
+                        <div th:class="${type}" th:classappend="types" th:text="${#messages.msg(type)}"></div>
+                    </th:block>
+                </div>
+                <div class="game-flavor" th:utext="*{gameFlavorText}"></div>
+                <div class="game-seq" th:text="*{#strings.concat('도감번호 : ', seq, '번')}"></div>
+                <th:block th:if="${requestShadowGame.gameQuizAnswer}">
+                    <div class="game-pokemon-quiz-check">정답입니다!</div>
+                </th:block>
+                <th:block th:unless="${requestShadowGame.gameQuizAnswer}">
+                    <div class="game-pokemon-quiz-check">오답입니다!</div>
+                </th:block>
+                <div class="game-pokemon-name" th:text="*{#strings.concat('정답은 ', name, '입니다!')}"></div>
+                <div class="game-answer">
+                    <button class="game-button-ps" type="submit" th:text="#{다음문제}"></button>
+                </div>
+            </div>
+        </form>
+    </section>
 </main>
 </html>

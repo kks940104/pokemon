@@ -22,7 +22,7 @@ public class ShadowGameService {
         List<Long> pokemonCounts = new ArrayList<>();
         form.setGameCorrectAnswer(0);
         form.setGameWrongAnswer(0);
-        form.setGameCount(0);
+        form.setGameCount(1);
 
         if(form.getPokemonCheck() == 386) {
             Collections.addAll(pokemonCounts,LongStream.range(1L, 387L).boxed().toArray(Long[]::new));
@@ -57,8 +57,9 @@ public class ShadowGameService {
     public Pokemon findPokemon(RequestShadowGame form) {
         Random random = new Random();
         int checkQuiz = random.nextInt(form.getPokemonCount().size());
-        form.setGamePokemonIndex(checkQuiz + 1L);
-        return pokemonInfoService.get(form.getPokemonCount().remove(checkQuiz));
+        Pokemon pokemon = pokemonInfoService.get(form.getPokemonCount().remove(checkQuiz));
+        form.setGamePokemon(pokemon);
+        return pokemon;
     }
 
     public String getFlavors(Pokemon pokemon) {
@@ -72,7 +73,7 @@ public class ShadowGameService {
         if (form.getGameCount() != 20) {
             form.setGameCount(form.getGameCount() + 1);
         }
-        Pokemon pokemon = pokemonInfoService.get(form.getGamePokemonIndex());
+        Pokemon pokemon = form.getGamePokemon();
         if (pokemon.getName().equals(form.getPokemonName())) {
             form.setGameQuizAnswer(true);
             form.setGameCorrectAnswer(form.getGameCorrectAnswer() + 1);
@@ -80,7 +81,6 @@ public class ShadowGameService {
             form.setGameWrongAnswer(form.getGameWrongAnswer() + 1);
         }
         form.setPokemonName(null);
-
     }
 }
 

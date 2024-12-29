@@ -1,6 +1,7 @@
 package org.koreait.games.controllers;
 
 import lombok.Data;
+import org.koreait.pokemon.entities.Pokemon;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,9 +19,11 @@ public class RequestShadowGame implements Serializable {
     private String pokemonName; // 입력한 포켓몬 이름
 
     private int gameCount; // 현재 게임 Count
-    private Long gamePokemonIndex; // 뽑은 포켓몬 seq
+    // private Long gamePokemonIndex; // 뽑은 포켓몬 seq
+    private Pokemon gamePokemon;
 
     private boolean gameQuizAnswer; // 정답 맞췄는지 못맞췄는지 확인. 이거 지워질 확률 있음.
     private int gameCorrectAnswer; // 정답 갯수
     private int gameWrongAnswer; // 오답 갯수
+    private boolean gameBtnClick; // 정답을 눌렀는지 안눌렀는지 체크
 }

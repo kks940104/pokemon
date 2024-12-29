@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.ToString;
 import org.koreait.global.entities.BaseEntity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @Data
 @Entity
-public class Pokemon extends BaseEntity {
+public class Pokemon extends BaseEntity implements Serializable {
 
     // wrapper class 사용
     @Id

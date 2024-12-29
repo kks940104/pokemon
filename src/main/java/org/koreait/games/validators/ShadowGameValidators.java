@@ -25,7 +25,7 @@ public class ShadowGameValidators implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         RequestShadowGame request = (RequestShadowGame) target;
-        if(request.getGameCount() >= 20) {
+        if(request.getGameCount() >= 21) {
             errors.rejectValue("gameCount", "error.shadowGame");
         }
     }
