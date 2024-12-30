@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="common">
+        <div class="game-count">
+            <span class="quiz-box" th:text="${#strings.concat('총 문제 20 / ', requestShadowGame.gameCount)}"></span>
+            <span class="quiz-box" th:text="${#strings.concat('정답 개수 : ', requestShadowGame.gameCorrectAnswer)}"></span>
+            <span class="quiz-box" th:text="${#strings.concat('오답 개수 : ', requestShadowGame.gameWrongAnswer)}"></span>
+        </div>
+        <div id="pokemon-image" class="pokemon-image" ondragstart="return false"
+             oncontextmenu="return false">
+            <th:block th:if="${mode == null || mode != 'ps' }" th:utext="*{@utils.showImage(frontImage, 390, 390, 'image')}"></th:block>
+            <th:block th:unless="${mode == null || mode != 'ps' }" th:utext="*{@utils.showImage(frontImage, 390, 390, 'image-ps')}"></th:block>
+        </div>
+        <div class="game-type">
+            <th:block th:each="type : *{_types}">
+                <div th:class="${type}" th:classappend="types" th:text="${#messages.msg(type)}"></div>
+            </th:block>
+        </div>
+    </th:block>
+</html>

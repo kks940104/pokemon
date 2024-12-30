@@ -1,6 +1,7 @@
 package org.koreait.games.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.games.services.ShadowGameService;
 import org.koreait.games.validators.ShadowGameValidators;
@@ -45,17 +46,21 @@ public class GameController {
     @GetMapping("/shadowGame")
     public String shadowGame(Model model) {
         commonProcess("game", model);
+        model.addAttribute("requestShadowGame", requestShadowGame());
         return utils.tpl("game/shadowgame");
     }
 
     @RequestMapping(path="/shadowstart", method={RequestMethod.POST, RequestMethod.GET})
-    public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors) {
+    public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors, HttpSession session) {
         commonProcess("gamestart", model);
+
+
         String message = request.getMethod().toLowerCase();
         shadowGameValidators.validate(form, errors);
         if (errors.hasErrors()) {
             status.setComplete();
-            return utils.tpl(request.getContextPath() + "main/index");
+            session.removeAttribute("requestShadowGame");
+            return "redirect:/";
         }
         if(message.equals("post")) {
             form.setPokemonCount(shadowGameService.pokemonGameSetting(form)); // 상중하 골라서 count check
@@ -80,6 +85,7 @@ public class GameController {
         Pokemon pokemon = form.getGamePokemon();
         pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon)); // 설명넣기
         model.addAttribute("pokemon", pokemon);
+        model.addAttribute("mode", "ps");
         return utils.tpl("game/shadowstart_ps");
     }
 
