@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <th:block th:fragment="common">
         <div class="game-count">
-            <span class="quiz-box" th:text="${#strings.concat('총 문제 20 / ', requestShadowGame.gameCount)}"></span>
+            <span class="quiz-box" th:text="${#strings.concat('총 문제 ',requestShadowGame.gameCount, ' / 20')}"></span>
             <span class="quiz-box" th:text="${#strings.concat('정답 개수 : ', requestShadowGame.gameCorrectAnswer)}"></span>
             <span class="quiz-box" th:text="${#strings.concat('오답 개수 : ', requestShadowGame.gameWrongAnswer)}"></span>
         </div>

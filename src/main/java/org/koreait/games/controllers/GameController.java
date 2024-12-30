@@ -30,7 +30,6 @@ public class GameController {
     private final HttpServletRequest request;
     private final ShadowGameService shadowGameService;
     private final ShadowGameValidators shadowGameValidators;
-    private final PokemonInfoService pokemonInfoService;
 
 /*    @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -53,8 +52,6 @@ public class GameController {
     @RequestMapping(path="/shadowstart", method={RequestMethod.POST, RequestMethod.GET})
     public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors, HttpSession session) {
         commonProcess("gamestart", model);
-
-
         String message = request.getMethod().toLowerCase();
         shadowGameValidators.validate(form, errors);
         if (errors.hasErrors()) {

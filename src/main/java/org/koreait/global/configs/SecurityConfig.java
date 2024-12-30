@@ -23,9 +23,6 @@ public class SecurityConfig {
     @Autowired
     private MemberInfoService memberInfoService;
 
-    @Autowired
-    private HttpSession session;
-
     // 이 수동빈 정말 중요.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

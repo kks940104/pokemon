@@ -23,22 +23,13 @@ public class ShadowGameService {
         form.setGameCorrectAnswer(0);
         form.setGameWrongAnswer(0);
         form.setGameCount(1);
-
-        if(form.getPokemonCheck() == 386) {
-            Collections.addAll(pokemonCounts,LongStream.range(1L, 387L).boxed().toArray(Long[]::new));
-            levelSetting(form, 386);
-        } else if (form.getPokemonCheck() == 649) {
-            Collections.addAll(pokemonCounts,LongStream.range(1L, 650L).boxed().toArray(Long[]::new));
-            levelSetting(form, 649);
-        } else if (form.getPokemonCheck() == 898) {
-            levelSetting(form, 898);
-            Collections.addAll(pokemonCounts,LongStream.range(1L, 899L).boxed().toArray(Long[]::new));
-        }
+        Collections.addAll(pokemonCounts,LongStream.range(1L, form.getPokemonCheck() + 1L).boxed().toArray(Long[]::new));
+        levelSetting(form, form.getPokemonCheck());
 
         return pokemonCounts;
     }
 
-    private void levelSetting(RequestShadowGame form, int count) {
+    private void levelSetting(RequestShadowGame form, Long count) {
         if (count == 386) {
             form.setRow(true);
             form.setMid(false);

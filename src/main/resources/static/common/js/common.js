@@ -79,7 +79,6 @@ commonLib.ajaxLoad = function (url, callback, method = "GET", data, headers, isT
       })
       .catch((err) => {
         console.error(err);
-
         reject(err); // 응답 실패..
       });
   }); // 반환값을 Promise로....
