@@ -2,7 +2,9 @@ package org.koreait.mypage.validators;
 
 
 import org.koreait.global.validator.PasswordValidator;
+import org.koreait.member.libs.MemberUtil;
 import org.koreait.mypage.controllers.RequestProfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -12,6 +14,10 @@ import org.springframework.validation.Validator;
 @Lazy
 @Component
 public class ProfileValidator implements Validator, PasswordValidator {
+
+    @Autowired
+    private MemberUtil memberUtil;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(RequestProfile.class);
@@ -22,6 +28,12 @@ public class ProfileValidator implements Validator, PasswordValidator {
         RequestProfile form = (RequestProfile) target;
         String password = form.getPassword();
         String confirmPassword = form.getConfirmPassword();
+        String email = form.getEmail();
+        String mode = form.getMode();
+
+        if (StringUtils.hasText(mode) && mode.equals("admin") && !StringUtils.hasText(email)) {
+            errors.rejectValue("email", "NotBlack");
+        }
 
         if (!StringUtils.hasText(password)) { // 비밀번호 있는지 확인.
             return;
