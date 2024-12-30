@@ -50,6 +50,12 @@ public class MemberController implements SubMenus {
         return "admin/member/list";
     }
 
+    @GetMapping("/info/{email}")
+    public String info(@PathVariable("email") String email, Model model) {
+
+        return "admin/member/info";
+    }
+
     /**
      * 회원 목록 수정 처리
      * @param model
