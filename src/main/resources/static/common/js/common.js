@@ -1,6 +1,7 @@
 var commonLib = commonLib ?? {};
 /**
  * 메타 태그 정보 조회
+ * 사이트 정보가 담겨있는 태그
  * mode - rootUrl : <meta name="rootUrl"... />
  */
 commonLib.getMeta = function (mode) {
@@ -18,7 +19,7 @@ commonLib.url = function (url) {
   return `${commonLib.getMeta("rootUrl").replace("/", "")}${url}`;
 };
 /**
- * Ajax 요청 처리0
+ * Ajax 요청 처리
  * @params url : 요청 주소, http[s] : 외부 URL - 컨택스트 경로는 추가 X
  * @params callback : 응답 완료 후 후속 처리 콜백 함수
  * @params method : 요청 방식 - GET, POST, DELETE, PATCH ...
@@ -32,9 +33,7 @@ commonLib.ajaxLoad = function (url, callback, method = "GET", data, headers, isT
   const { getMeta } = commonLib;
   const csrfHeader = getMeta("_csrf_header");
   const csrfToken = getMeta("_csrf");
-  url = /^http[s]?:/.test(url)
-    ? url
-    : getMeta("rootUrl") + url.replace("/", "");
+  url = /^http[s]?:/.test(url) ? url : commonLib.url(url);
 
   headers = headers ?? {};
   headers[csrfHeader] = csrfToken;
@@ -102,7 +101,7 @@ commonLib.popup = function(url, width = 350, height = 350, isAjax = false) {
 */
 
 
-    /* 레이저 팝업 요소 동적 추가 S */
+    /* 레이어 팝업 요소 동적 추가 S */
 
     const layerEls = document.querySelectorAll(".layer-dim .layer-popup");
     layerEls.forEach(el => el.parentElement.removeChild(el));
