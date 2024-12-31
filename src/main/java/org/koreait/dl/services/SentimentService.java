@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 
 @Lazy
@@ -34,6 +37,8 @@ public class SentimentService {
             ProcessBuilder builder = new ProcessBuilder(runPath, scriptPath + "naver.py", bertPath, data);
             Process process = builder.start();
             InputStream in = process.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            br.lines().forEach(System.out::println);
             return om.readValue(in.readAllBytes(), double[].class);
 
         } catch (Exception e) {

@@ -18,7 +18,7 @@ public class SentimentServiceTest {
 
     @Test
     void predictTest() {
-        List<String> items = List.of("재미없음", "재미있음, 10점 만점");
+        List<String> items = List.of("재미없음", "재미있음 10점 만점");
 
         double[] predictions = service.predict(items);
 
