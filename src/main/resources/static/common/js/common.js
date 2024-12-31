@@ -173,6 +173,33 @@ commonLib.popupClose = function() {
     const layerEls = document.querySelectorAll(".layer-dim, .layer-popup");
     layerEls.forEach(el => el.parentElement.removeChild(el));
 };
+/**
+* 위지윅 에디터 로드 메서드
+*
+*/
+
+commonLib.loadEditor = function(id, height = 350) {
+    if (typeof ClassicEditor === 'undefined' || !id) {
+        return;
+    }
+
+
+    return new Promise((resolve, reject) => {
+        (async() => {
+            try {
+                const editor = await ClassicEditor.create(document.getElementById(id));
+                resolve(editor);
+                const editorAreas = document.getElementsByClassName("ck-editor__editable");
+                for (const el of editorAreas) {
+                    el.style.height = `${height}px`;
+                }
+            } catch(err) {
+                console.error(err);
+                reject(err);
+            }
+        })();
+    });
+};
 
 window.addEventListener("DOMContentLoaded", function () {
   // 체크박스 전체 토글 기능 S

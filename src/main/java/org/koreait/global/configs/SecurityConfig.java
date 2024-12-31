@@ -74,8 +74,7 @@ public class SecurityConfig {
          */
 
         http.authorizeHttpRequests(c -> {
-            c.requestMatchers("/mypage/**").authenticated() // 인증한 회원
-                    .requestMatchers("/game/**").authenticated() // 게임도 인증한 회원만 가능.
+            c.requestMatchers("/mypage/**", "/message/**", "/game/**").authenticated() // 인증한 회원
                     .requestMatchers("/member/login", "/member/join", "/member/agree").anonymous() // 미인증 회원
                     .requestMatchers("/admin/**").hasAnyAuthority("MANAGER", "ADMIN") // 관리자 페이지는 MANAGER, ADMIN 권한
                     .anyRequest().permitAll(); // 나머지 페이지는 모두 접근 가능
