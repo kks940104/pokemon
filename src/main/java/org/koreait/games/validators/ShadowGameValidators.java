@@ -14,9 +14,6 @@ import org.springframework.validation.Validator;
 @AllArgsConstructor
 public class ShadowGameValidators implements Validator {
 
-
-    private final PokemonInfoService pokemonInfoService;
-
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(RequestShadowGame.class);
