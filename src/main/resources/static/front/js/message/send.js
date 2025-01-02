@@ -22,29 +22,47 @@ function callbackFileUpload(files) {
     const tpl = document.getElementById("tpl-file-item").innerHTML;
     const domParser = new DOMParser();
 
+    const { fileManager } = commonLib;
+
     for (const {seq, fileUrl, fileName, location} of files) {
         let html = tpl;
         html = html.replace(/\[seq\]/g, seq)
-                    .replace(/\[filename\]/g, fileName)
+                    .replace(/\[fileName\]/g, fileName)
                     .replace(/\[fileUrl\]/g, fileUrl);
 
         const dom = domParser.parseFromString(html, "text/html");
         const fileItem = dom.querySelector(".file-item");
+        const el = fileItem.querySelector(".insert-editor");
+
+        const removeEl = fileItem.querySelector(".remove");
 
         if (location === 'editor') { // 에디터에 추가될 이미지
             imageUrls.push(fileUrl);
             targetEditor.append(fileItem);
+            el.addEventListener("click", function() {
+                const { url } = this.dataset;
+                insertImage(url);
+            });
         } else { // 다운로드를 위한 첨부 파일
-            const el = fileItem.querySelector(".insert-editor");
             el.parentElement.removeChild(el);
-
             targetAttach.append(fileItem);
         }
+
+        removeEl.addEventListener("click", function() {
+            if(!confirm("정말 삭제하겠습니까?")) {
+                return;
+            }
+            fileManager.delete(seq, (f) => {
+                const el = document.getElementById(`file-${f.seq}`);
+                if (el) el.parentElement.removeChild(el);
+            });
+        });
     }
 
     if (imageUrls.length > 0) insertImage(imageUrls);
 }
 
 function insertImage(imageUrls) {
+    imageUrls = typeof imageUrls === 'string' ? [imageUrls] : imageUrls;
     editor.execute('insertImage', { source : imageUrls });
 }

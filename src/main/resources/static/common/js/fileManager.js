@@ -100,15 +100,15 @@ window.addEventListener("DOMContentLoaded", function() {
             // 이벤트를 기존꺼 제거후 다시 생성, 종종 같이 발생할때가 있기때문.
             fileEl.removeEventListener("change", fileEventHandler); // 이벤트 삭제
             fileEl.addEventListener("change", fileEventHandler); // 이벤트 생성
-
-            function fileEventHandler(e) {
-                const files = e.currentTarget.files;
-                const {gid, location, single, imageOnly, done} = fileEl;
-
-                const { fileManager } = commonLib;
-                fileManager.upload(files, gid, location, single, imageOnly, done);
-            }
         });
+    }
+
+    function fileEventHandler(e) {
+        const files = e.currentTarget.files;
+        const {gid, location, single, imageOnly, done} = fileEl;
+
+        const { fileManager } = commonLib;
+        fileManager.upload(files, gid, location, single, imageOnly, done);
     }
 
     // 드래그 앤 드롭 파일 업로드 처리
