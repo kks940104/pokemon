@@ -1,7 +1,10 @@
 package org.koreait.message.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.koreait.file.entites.FileInfo;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.entities.Member;
@@ -11,6 +14,11 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
+// 빌더를 쓰면 기본 생성자가 private라서 편법을 사용하기 위해 두가지 추가.
+@NoArgsConstructor
+@AllArgsConstructor
+//
 public class Message extends BaseEntity {
 
     @Id

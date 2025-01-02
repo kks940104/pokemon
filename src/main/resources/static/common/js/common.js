@@ -197,9 +197,6 @@ commonLib.loadEditor = function(id, height = 350) {
                     writer.setStyle("height", `${height}px`, editor.editing.view.document.getRoot());
                 });
 
-                const removeEls = document.getElementsByClassName("ck-powered-by");
-                console.log(removeEls);
-
                 /*
                 const editorAreas = document.getElementsByClassName("ck-editor__editable");
                 for (const el of editorAreas) {

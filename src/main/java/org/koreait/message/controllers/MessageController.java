@@ -6,6 +6,7 @@ import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.message.services.MessageSendService;
 import org.koreait.message.validators.MessageValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,7 @@ public class MessageController {
     private final Utils utils;
     private final MessageValidator messageValidator;
     private final FileInfoService fileInfoService;
+    private final MessageSendService sendService;
 
 
     @ModelAttribute("addCss")
@@ -61,6 +63,9 @@ public class MessageController {
             form.setAttachFiles(fileInfoService.getList(gid, "attach", FileStatus.ALL));
             return utils.tpl("message/form");
         }
+
+        sendService.process(form);
+
         return "redirect:/message/list";
     }
 

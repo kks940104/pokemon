@@ -5,6 +5,28 @@ window.addEventListener("DOMContentLoaded", function () {
         .then((editor) => {
             window.editor = editor; // 전역 변수로 등록, then 구간 외부에서도 접근 가능하게 처리
         });
+
+    //  이미지 본문 추가 이벤트 처리
+    const insertEditors = document.querySelectorAll(".insert-editor");
+    insertEditors.forEach(el => {
+        el.addEventListener("click", e => insertImage(e.currentTarget.dataset.url));
+    });
+
+    // 파일 삭제 버튼 이벤트 처리
+    const removeEls = document.querySelectorAll(".file-item .remove");
+    const { fileManager } = commonLib;
+    removeEls.forEach(el => {
+        el.addEventListener("click", e => {
+            if (confirm("정말 삭제하겠습니까?")) {
+                console.log("확인1");
+                const seq = e.currentTarget.dataset.seq;
+                fileManager.delete(seq, () => {
+                    const el = document.getElementById(`file-${seq}`);
+                    el.parentElement.removeChild(el);
+                });
+            }
+        });
+    });
 });
 
 /**
