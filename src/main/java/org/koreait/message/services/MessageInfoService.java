@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.file.services.FileInfoService;
 import org.koreait.global.libs.Utils;
 import org.koreait.global.paging.ListData;
 import org.koreait.global.paging.Pagination;
@@ -25,11 +26,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MessageInfoService {
+
     private final MessageRepository messageRepository;
+    private final FileInfoService fileInfoService;
     private final JPAQueryFactory queryFactory;
     private final HttpServletRequest request;
-    private final Utils utils;
     private final MemberUtil memberUtil;
+    private final Utils utils;
 
     /**
      * 쪽지 하나 조회
@@ -41,7 +44,6 @@ public class MessageInfoService {
         BooleanBuilder builder = new BooleanBuilder();
         BooleanBuilder orBuilder = new BooleanBuilder();
         QMessage message = QMessage.message;
-
         builder.and(message.seq.eq(seq));
 
         if (!memberUtil.isAdmin()) {
@@ -126,7 +128,9 @@ public class MessageInfoService {
      * @param item
      */
     private void addInfo(Message item) {
-        
+        String gid = item.getGid();
+        item.setEditorImages(fileInfoService.getList(gid,"editor"));
+        item.setAttachFiles(fileInfoService.getList(gid,"attach"));
     }
 }
 
