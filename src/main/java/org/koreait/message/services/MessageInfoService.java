@@ -131,24 +131,6 @@ public class MessageInfoService {
         String gid = item.getGid();
         item.setEditorImages(fileInfoService.getList(gid,"editor"));
         item.setAttachFiles(fileInfoService.getList(gid,"attach"));
+        item.setReceived(item.getReceiver().getSeq().equals(memberUtil.getMember().getSeq()));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,10 +1,7 @@
 package org.koreait.message.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.koreait.file.entites.FileInfo;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.entities.Member;
@@ -54,6 +51,9 @@ public class Message extends BaseEntity {
 
     @Transient
     private List<FileInfo> attachFiles;
+
+    @Transient
+    private boolean received;
 }
 
 

@@ -6,7 +6,11 @@ import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.paging.ListData;
+import org.koreait.message.entities.Message;
+import org.koreait.message.services.MessageInfoService;
 import org.koreait.message.services.MessageSendService;
+import org.koreait.message.services.MessageStatusService;
 import org.koreait.message.validators.MessageValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +32,8 @@ public class MessageController {
     private final MessageValidator messageValidator;
     private final FileInfoService fileInfoService;
     private final MessageSendService sendService;
+    private final MessageInfoService infoService;
+    private final MessageStatusService statusService;
 
 
     @ModelAttribute("addCss")
@@ -74,8 +80,15 @@ public class MessageController {
      * @return
      */
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(@ModelAttribute MessageSearch search, Model model) {
         commonProcess("list", model);
+        String mode = search.getMode();
+        search.setMode(StringUtils.hasText(mode) ? mode : "receive");
+
+        ListData<Message> data = infoService.getList(search);
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("pagination", data.getPagination());
+
         return utils.tpl("message/list");
     }
 
@@ -85,8 +98,13 @@ public class MessageController {
      * @return
      */
     @GetMapping("/view/{seq}")
-    public String info(@PathVariable("seq") Long seq, Model model) {
+    public String view(@PathVariable("seq") Long seq, Model model) {
         commonProcess("view", model);
+
+        Message item = infoService.get(seq);
+        model.addAttribute("item", item);
+        statusService.change(seq); // 열람 상태로 변경
+
         return utils.tpl("message/view");
     }
 
