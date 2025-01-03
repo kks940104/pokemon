@@ -14,15 +14,10 @@ import java.lang.annotation.Target;
 public @interface MockMember {
 
     long seq() default 1L;
-
     String email() default "user01@test.org";
-
     // 추후 사용시 비밀번호는 Bcrypt 해시화 권장
     String password() default "_aA123456";
-
     String name() default "사용자01";
-
     String nickName() default "닉네임01";
-
     Authority[] authority() default {Authority.USER};
 }

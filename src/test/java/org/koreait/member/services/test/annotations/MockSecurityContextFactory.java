@@ -44,13 +44,10 @@ public class MockSecurityContextFactory implements WithSecurityContextFactory<Mo
         // Member 쪽에 설정할 값 (관계 Mapping 으로 Authorities 와 이어져 있어서 Test 시 필요할 수도 있음)
         List<Authorities> _authorities = Arrays.stream(annotation.authority())
                 .map(a -> {
-
                     Authorities auth = new Authorities();
                     auth.setAuthority(a);
                     auth.setMember(member);
-
                     return auth;
-
                 }).toList();
 
         member.setAuthorities(_authorities);
