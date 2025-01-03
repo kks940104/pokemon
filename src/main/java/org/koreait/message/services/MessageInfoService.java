@@ -80,6 +80,7 @@ public class MessageInfoService {
         mode = StringUtils.hasText(mode) ? mode : "receive";
         // send - 보낸 쪽지 목록, receive - 받은 쪽지 목록
         andBuilder.and(mode.equals("send") ? message.sender.eq(member) : message.receiver.eq(member));
+        andBuilder.and(mode.equals("send") ? message.deleteBySender.eq(false) : message.deletedByReceiver.eq(false));
 
         // region 보낸 사람 조건 검색
 
