@@ -197,8 +197,8 @@ public class Utils {
      * @return
      */
     public String nl2br(String text) {
-        text =  text.replaceAll("\\r", "")
-                .replaceAll("\\n", "<br>");
+        text = text == null ? "" : text.replaceAll("\\r", "")
+                                       .replaceAll("\\n", "<br>");
         return text;
     }
 
@@ -206,21 +206,3 @@ public class Utils {
         return String.format("commonLib.popup('%s', %d, %d)", url, width, height);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
