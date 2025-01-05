@@ -21,7 +21,6 @@ window.addEventListener("DOMContentLoaded", function() {
 *
 */
 function callbackFileUpload(files) {
-    console.log(files);
     if (!files || files.length === 0) return;
 
     const el = document.querySelector(".profile-image");
