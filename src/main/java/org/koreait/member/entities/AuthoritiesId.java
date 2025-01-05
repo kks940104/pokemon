@@ -3,6 +3,7 @@ package org.koreait.member.entities;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.koreait.games.constants.Level;
 import org.koreait.member.constants.Authority;
 
 @EqualsAndHashCode

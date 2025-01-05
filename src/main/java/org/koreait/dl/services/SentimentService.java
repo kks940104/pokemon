@@ -7,19 +7,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Lazy
 @Service
 @Profile("dl")
 public class SentimentService {
 
-    @Value("${python.run.path}")
+  /*  @Value("${python.run.path}")
     private String runPath;
 
     @Value("${python.script2.path}")
@@ -38,6 +34,9 @@ public class SentimentService {
             ProcessBuilder builder = new ProcessBuilder(runPath, scriptPath + "naver.py", bertPath, data);
             Process process = builder.start();
             InputStream in = process.getInputStream();
+
+            process.waitFor();
+
             return om.readValue(in.readAllBytes(), double[].class);
 
         } catch (Exception e) {
@@ -45,5 +44,5 @@ public class SentimentService {
         }
 
         return null;
-    }
+    }*/
 }

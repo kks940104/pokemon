@@ -4,19 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.games.controllers.RequestShadowGame;
 import org.koreait.global.libs.Utils;
 import org.koreait.pokemon.entities.Pokemon;
-import org.koreait.pokemon.repositories.PokemonRepository;
 import org.koreait.pokemon.services.PokemonInfoService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.LongStream;
 
+@Lazy
 @Service
 @RequiredArgsConstructor
-public class ShadowGameService {
-
-    private final PokemonInfoService pokemonInfoService;
-    private final Utils utils;
+public class ShadowGameSettingService {
 
     public List<Long> pokemonGameSetting(RequestShadowGame form) {
         List<Long> pokemonCounts = new ArrayList<>();
@@ -43,35 +41,6 @@ public class ShadowGameService {
             form.setMid(false);
             form.setHigh(false);
         }
-    }
-
-    public Pokemon findPokemon(RequestShadowGame form) {
-        Random random = new Random();
-        int checkQuiz = random.nextInt(form.getPokemonCount().size());
-        Pokemon pokemon = pokemonInfoService.get(form.getPokemonCount().remove(checkQuiz));
-        form.setGamePokemon(pokemon);
-        return pokemon;
-    }
-
-    public String getFlavors(Pokemon pokemon) {
-        List<String> flavors = new ArrayList<>(pokemon.get_flavorText().values());
-
-        return flavors == null ? "" : utils.nl2br(flavors.get(0));
-    }
-
-    public void validatePokemon(RequestShadowGame form) {
-        form.setGameQuizAnswer(false);
-        if (form.getGameCount() != 20) {
-            form.setGameCount(form.getGameCount() + 1);
-        }
-        Pokemon pokemon = form.getGamePokemon();
-        if (pokemon.getName().equals(form.getPokemonName())) {
-            form.setGameQuizAnswer(true);
-            form.setGameCorrectAnswer(form.getGameCorrectAnswer() + 1);
-        } else {
-            form.setGameWrongAnswer(form.getGameWrongAnswer() + 1);
-        }
-        form.setPokemonName(null);
     }
 }
 

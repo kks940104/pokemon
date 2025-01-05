@@ -59,10 +59,10 @@ public class ApiDlController {
         return new JSONData(predictions);
     }
 
-    @PostMapping("/sentiment")
+/*    @PostMapping("/sentiment")
     public JSONData sentiment(@RequestParam("items") List<String> items) {
         double[] predictions = sentimentService.predict(items);
 
         return new JSONData(predictions);
-    }
+    }*/
 }

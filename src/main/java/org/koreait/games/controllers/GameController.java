@@ -3,12 +3,14 @@ package org.koreait.games.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.koreait.games.services.ShadowGameService;
+import org.koreait.games.services.ShadowGameInfoService;
+import org.koreait.games.services.ShadowGameRankUpdateService;
+import org.koreait.games.services.ShadowGameSettingService;
+import org.koreait.games.services.ShadowGameValidateService;
 import org.koreait.games.validators.ShadowGameValidators;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
 import org.koreait.pokemon.entities.Pokemon;
-import org.koreait.pokemon.services.PokemonInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -28,8 +30,11 @@ public class GameController {
 
     private final Utils utils;
     private final HttpServletRequest request;
-    private final ShadowGameService shadowGameService;
-    private final ShadowGameValidators shadowGameValidators;
+    private final ShadowGameValidators Validators;
+    private final ShadowGameInfoService InfoService;
+    private final ShadowGameSettingService SettingService;
+    private final ShadowGameValidateService ValidateService;
+    private final ShadowGameRankUpdateService RankUpdateService;
 
 /*    @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -53,17 +58,18 @@ public class GameController {
     public String shadowStart(@ModelAttribute RequestShadowGame form, Model model, SessionStatus status, Errors errors, HttpSession session) {
         commonProcess("gamestart", model);
         String message = request.getMethod().toLowerCase();
-        shadowGameValidators.validate(form, errors);
+        Validators.validate(form, errors);
         if (errors.hasErrors()) {
+            RankUpdateService.process(form);
             status.setComplete();
             session.removeAttribute("requestShadowGame");
             return "redirect:/";
         }
-        if(message.equals("post")) {
-            form.setPokemonCount(shadowGameService.pokemonGameSetting(form)); // 상중하 골라서 count check
+        if (message.equals("post")) {
+            form.setPokemonCount(SettingService.pokemonGameSetting(form)); // 상중하 골라서 count check
         }
-        Pokemon pokemon = shadowGameService.findPokemon(form); // 포켓몬 뽑기
-        pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon)); // 설명넣기
+        Pokemon pokemon = InfoService.findPokemon(form); // 포켓몬 뽑기
+        pokemon.setGameFlavorText(InfoService.getFlavors(pokemon)); // 설명넣기
         form.setGameBtnClick(false);
         model.addAttribute("pokemon", pokemon);
         return utils.tpl("game/shadowstart");
@@ -78,9 +84,9 @@ public class GameController {
     @PostMapping("/shadowstart_ps")
     public String shadowStart_ps(@ModelAttribute RequestShadowGame form, Model model) {
         commonProcess("gamestart", model);
-        shadowGameService.validatePokemon(form);
+        ValidateService.validatePokemon(form);
         Pokemon pokemon = form.getGamePokemon();
-        pokemon.setGameFlavorText(shadowGameService.getFlavors(pokemon)); // 설명넣기
+        pokemon.setGameFlavorText(InfoService.getFlavors(pokemon)); // 설명넣기
         model.addAttribute("pokemon", pokemon);
         model.addAttribute("mode", "ps");
         return utils.tpl("game/shadowstart_ps");

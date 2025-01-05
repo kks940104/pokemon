@@ -66,7 +66,6 @@ public class MemberUpdateService {
         Authorities auth = new Authorities();
         auth.setMember(member);
         auth.setAuthority(Authority.USER); // 회원 권한이 없는 경우 - 회원 가입시, 기본 권한 USER
-        System.out.println(auth);
 
         save(member, List.of(auth)); // 회원 저장 처리
     }
@@ -140,8 +139,6 @@ public class MemberUpdateService {
     private void save(Member member, List<Authorities> authorities) {
         memberRepository.saveAndFlush(member);
 
-        System.out.println(authorities);
-
         // region 회원 권한 업데이트 처리
 
         if (authorities != null) {
@@ -150,8 +147,6 @@ public class MemberUpdateService {
              */
             QAuthorities qAuthorities = QAuthorities.authorities;
             List<Authorities> items = (List<Authorities>) authoritiesRepository.findAll(qAuthorities.member.eq(member));
-
-            System.out.println(qAuthorities);
 
             if (items != null) {
                 authoritiesRepository.deleteAll(items);

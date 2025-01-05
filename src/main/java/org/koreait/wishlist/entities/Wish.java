@@ -14,7 +14,7 @@ public class Wish {
 
     @Id
     @Enumerated(EnumType.STRING)
-    @Column(length = 15, name="_type")
+    @Column(length = 15, name="_type") // 예약어.
     private WishType type;
 
     @Id

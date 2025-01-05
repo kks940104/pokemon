@@ -1,7 +1,7 @@
 package org.koreait.pokemon.services;
 
 import org.junit.jupiter.api.Test;
-import org.koreait.games.services.ShadowGameService;
+import org.koreait.games.services.ShadowGameSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class PokemonGameService {
 
     @Autowired
-    private ShadowGameService shadowGameService;
+    private ShadowGameSettingService shadowGameSettingService;
 
     @Test
     void test1() {

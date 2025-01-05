@@ -1,17 +1,15 @@
-package org.koreait.wishlist.entities;
+package org.koreait.games.entitis;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.koreait.games.constants.Level;
 import org.koreait.member.entities.Member;
-import org.koreait.wishlist.constants.WishType;
 
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class WishId {
-    private Long seq;
-    private WishType type;
+public class GameRankId {
     private Member member;
+    private Level level;
 }
-
