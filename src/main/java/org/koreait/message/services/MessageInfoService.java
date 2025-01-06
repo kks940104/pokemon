@@ -49,8 +49,15 @@ public class MessageInfoService {
         if (!memberUtil.isAdmin()) {
             Member member = memberUtil.getMember();
 
+            BooleanBuilder orBuilder2 = new BooleanBuilder();
+            BooleanBuilder andBuilder = new BooleanBuilder();
+            orBuilder2.or(andBuilder.and(message.notice.eq(true)).and(message.receiver.isNull())) // 공지사항
+                      .or(message.receiver.eq(member));
+
             orBuilder.or(message.sender.eq(member))
-                    .or(message.receiver.eq(member));
+                    /*.or(message.receiver.eq(member));*/
+                     .or(orBuilder2);
+
 
             builder.and(orBuilder);
         }
@@ -79,8 +86,19 @@ public class MessageInfoService {
         Member member = memberUtil.getMember();
         mode = StringUtils.hasText(mode) ? mode : "receive";
         // send - 보낸 쪽지 목록, receive - 받은 쪽지 목록
-        andBuilder.and(mode.equals("send") ? message.sender.eq(member) : message.receiver.eq(member));
-        andBuilder.and(mode.equals("send") ? message.deleteBySender.eq(false) : message.deletedByReceiver.eq(false));
+        if (mode.equals("send")) {
+            andBuilder.and(message.sender.eq(member));
+        } else {
+            BooleanBuilder orBuilder = new BooleanBuilder();
+            BooleanBuilder andBuilder1 = new BooleanBuilder();
+
+            orBuilder.or(andBuilder1.and(message.notice.eq(true)).and(message.receiver.isNull())) // 공지쪽지
+                    .or(message.receiver.eq(member));
+            andBuilder.and(orBuilder);
+        }
+
+        //andBuilder.and(mode.equals("send") ? message.sender.eq(member) : message.receiver.eq(member));
+        andBuilder.and(mode.equals("send") ? message.deletedBySender.eq(false) : message.deletedByReceiver.eq(false));
 
         // region 보낸 사람 조건 검색
 
@@ -113,7 +131,7 @@ public class MessageInfoService {
                 .where(andBuilder)
                 .limit(limit)
                 .offset(offset)
-                .orderBy(message.createdAt.desc())
+                .orderBy(message.notice.desc(), message.createdAt.desc())
                 .fetch();
 
         items.forEach(this::addInfo); // 추가 정보 처리
@@ -130,8 +148,19 @@ public class MessageInfoService {
      */
     private void addInfo(Message item) {
         String gid = item.getGid();
+        Member member = memberUtil.getMember();
         item.setEditorImages(fileInfoService.getList(gid,"editor"));
         item.setAttachFiles(fileInfoService.getList(gid,"attach"));
-        item.setReceived(item.getReceiver().getSeq().equals(memberUtil.getMember().getSeq()));
+        item.setReceived(
+                (item.isNotice() && item.getReceiver() == null) ||
+                 item.getReceiver().getSeq().equals(member.getSeq()));
+
+        // 삭제 가능 여부
+        boolean deletable =
+                (item.isNotice()
+                && memberUtil.isAdmin())
+                || (!item.isNotice() && item.getSender().getSeq().equals(member.getSeq())
+                || item.getReceiver().getSeq().equals(member.getSeq()));
+        item.setDeletable(deletable);
     }
 }

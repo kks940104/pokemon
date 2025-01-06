@@ -15,7 +15,7 @@ import java.util.List;
 // 빌더를 쓰면 기본 생성자가 private라서 편법을 사용하기 위해 두가지 추가.
 @NoArgsConstructor
 @AllArgsConstructor
-//
+@Table(indexes = @Index(name="idx_notice_created_at", columnList = "notice DESC, createdAt DESC"))
 public class Message extends BaseEntity {
 
     @Id
@@ -54,8 +54,11 @@ public class Message extends BaseEntity {
 
     @Transient
     private boolean received;
+
+    @Transient
+    private boolean deletable; // 삭제 가능 여부
     
-    private boolean deleteBySender; // 보내는 쪽에서 쪽지를 삭제한 경우
+    private boolean deletedBySender; // 보내는 쪽에서 쪽지를 삭제한 경우
 
     private boolean deletedByReceiver; // 받는 쪽에서 쪽지를 삭제한 경우
 }
