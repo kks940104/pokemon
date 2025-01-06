@@ -3,6 +3,7 @@ package org.koreait.games.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.koreait.games.entitis.GameRank;
 import org.koreait.games.services.ShadowGameInfoService;
 import org.koreait.games.services.ShadowGameRankUpdateService;
 import org.koreait.games.services.ShadowGameSettingService;
@@ -10,6 +11,8 @@ import org.koreait.games.services.ShadowGameValidateService;
 import org.koreait.games.validators.ShadowGameValidators;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.paging.ListData;
+import org.koreait.member.entities.Member;
 import org.koreait.pokemon.entities.Pokemon;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -91,6 +94,16 @@ public class GameController {
         model.addAttribute("mode", "ps");
         return utils.tpl("game/shadowstart_ps");
     }
+
+    @GetMapping("/shadowRank")
+    public String rankShow(Model model) {
+        commonProcess("game", model);
+        ListData<GameRank> data = new ListData<>();
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("pagination", data.getPagination());
+        return "admin/member/list";
+    }
+
 
     private void commonProcess(String mode, Model model) {
         mode = StringUtils.hasText(mode) ? mode : "game";
