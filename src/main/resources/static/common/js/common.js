@@ -198,7 +198,7 @@ commonLib.loadEditor = function(id, height = 350) {
                 });
 
                 /*
-                const editorAreas = document.getElementsByClassName("ck-editor__editable");
+                const editorAreas = document.getElementsByClassName("ck-powered-by");
                 for (const el of editorAreas) {
                     el.style.height = `${height}px !important`;
                 }*/

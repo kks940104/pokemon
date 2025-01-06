@@ -15,7 +15,7 @@ import java.util.List;
 @Profile("dl")
 public class SentimentService {
 
-  /*  @Value("${python.run.path}")
+    @Value("${python.run.path}")
     private String runPath;
 
     @Value("${python.script2.path}")
@@ -44,5 +44,5 @@ public class SentimentService {
         }
 
         return null;
-    }*/
+    }
 }

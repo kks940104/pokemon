@@ -12,7 +12,7 @@ import org.koreait.member.entities.Member;
 public class GameRank extends BaseEntity {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @Id
