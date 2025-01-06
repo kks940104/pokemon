@@ -22,7 +22,7 @@ public class MessageSendService {
     private final MemberRepository memberRepository;
     private final FileDoneService fileDoneService;
 
-    public void process(RequestMessage form) {
+    public Message process(RequestMessage form) {
 
         String email = form.getEmail();
         Member receiver = !form.isNotice() ? memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new) : null;
@@ -39,6 +39,8 @@ public class MessageSendService {
 
         messageRepository.saveAndFlush(message);
         fileDoneService.process(form.getGid()); // 파일 업로드 완료 처리
+
+        return message;
     }
 
 }
