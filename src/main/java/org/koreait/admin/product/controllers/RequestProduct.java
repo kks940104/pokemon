@@ -1,6 +1,5 @@
 package org.koreait.admin.product.controllers;
 
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.koreait.file.entites.FileInfo;
