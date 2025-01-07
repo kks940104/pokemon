@@ -26,6 +26,8 @@ public class ShadowGameRankUpdateService {
 
         gameLevel(form, gameRank);
 
+        System.out.println("gameRank : " + gameRank);
+
         repository.saveAndFlush(gameRank);
     }
 

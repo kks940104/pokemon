@@ -21,7 +21,7 @@ public class ShadowGameValidators implements Validator {
     public void validate(Object target, Errors errors) {
         RequestShadowGame request = (RequestShadowGame) target;
         System.out.println("체크용" + request.getGameCount());
-        if(request.getGameCount() >= 5) {
+        if(request.getGameCount() >= 21) {
             errors.rejectValue("gameCount", "error.shadowGame");
         }
     }

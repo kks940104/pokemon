@@ -3,11 +3,9 @@ package org.koreait.games.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.koreait.games.constants.Level;
 import org.koreait.games.entitis.GameRank;
-import org.koreait.games.services.ShadowGameInfoService;
-import org.koreait.games.services.ShadowGameRankUpdateService;
-import org.koreait.games.services.ShadowGameSettingService;
-import org.koreait.games.services.ShadowGameValidateService;
+import org.koreait.games.services.*;
 import org.koreait.games.validators.ShadowGameValidators;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
@@ -37,7 +35,8 @@ public class GameController {
     private final ShadowGameInfoService InfoService;
     private final ShadowGameSettingService SettingService;
     private final ShadowGameValidateService ValidateService;
-    private final ShadowGameRankUpdateService RankUpdateService;
+    private final ShadowGameRankUpdateService rankUpdateService;
+    private final ShadowGameRankInfoService rankInfoService;
 
 /*    @ModelAttribute("addCss")
     public List<String> addCss() {
@@ -63,7 +62,7 @@ public class GameController {
         String message = request.getMethod().toLowerCase();
         Validators.validate(form, errors);
         if (errors.hasErrors()) {
-            RankUpdateService.process(form);
+            rankUpdateService.process(form);
             status.setComplete();
             session.removeAttribute("requestShadowGame");
             return "redirect:/";
@@ -95,13 +94,13 @@ public class GameController {
         return utils.tpl("game/shadowstart_ps");
     }
 
-    @GetMapping("/shadowRank")
-    public String rankShow(Model model) {
+    @GetMapping("/shadowrank/{level}")
+    public String rankShow(@PathVariable("level") String level, Model model) {
         commonProcess("game", model);
-        ListData<GameRank> data = new ListData<>();
-        model.addAttribute("items", data.getItems());
-        model.addAttribute("pagination", data.getPagination());
-        return "admin/member/list";
+        Level lv = Level.valueOf(level);
+        List<GameRank> rank = rankInfoService.getRankList(lv);
+        model.addAttribute("rank", rank);
+        return utils.tpl("game/ranklist");
     }
 
 

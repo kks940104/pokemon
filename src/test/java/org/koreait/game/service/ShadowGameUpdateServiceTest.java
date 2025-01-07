@@ -14,8 +14,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+
 @SpringBootTest
-@ActiveProfiles({"default","dl","test"})
 public class ShadowGameUpdateServiceTest {
 
     @Autowired
