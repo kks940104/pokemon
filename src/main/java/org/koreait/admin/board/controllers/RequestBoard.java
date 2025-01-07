@@ -8,6 +8,9 @@ import java.util.List;
 
 @Data
 public class RequestBoard {
+
+    private String mode;
+
     @NotBlank
     private String bid; // 게시판 아이디
 
@@ -21,6 +24,8 @@ public class RequestBoard {
     private boolean useEditor; // 에디터 사용 여부
     private boolean useEditorImage; // 에디터 첨부 이미지 노출 사용 여부
     private boolean useAttachFile; // 다운로드용 첨부 파일 사용 여부
+    private boolean useComment; // 댓글 사용 여부
+    private String skin; // 게시판 스킨. 기본값 - default
 
     private Authority listAuthority; // 목록 접근 권한
     private Authority viewAuthority; // 글보기 접근 권한

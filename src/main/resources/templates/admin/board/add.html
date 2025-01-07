@@ -5,6 +5,7 @@
 <div layout:fragment="content">
     <h1>게시글 등록</h1>
     <form name="frmSave" method="POST" th:action="@{/admin/board/save}" autocomplete="off">
+        <input type="hidden" name="mode" value="add">
         <th:block th:replace="~{admin/board/_form::common}"></th:block>
 
         <div class="button-group">
