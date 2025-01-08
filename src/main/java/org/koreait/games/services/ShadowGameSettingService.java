@@ -28,7 +28,7 @@ public class ShadowGameSettingService {
     }
 
     private void levelSetting(RequestShadowGame form, Long count) {
-        if (count == 386) {
+        if (count == 493) {
             form.setRow(true);
             form.setMid(false);
             form.setHigh(false);

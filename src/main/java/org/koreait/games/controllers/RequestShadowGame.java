@@ -11,7 +11,7 @@ public class RequestShadowGame implements Serializable {
 
     private List<Long> pokemonCount; // 현재 난이도에 맞게 포켓몬을 넣어주는 List
 
-    private Long pokemonCheck; // 상 - 898, 중 - 649, 하 - 386으로 포켓몬 몇명 뽑았는지 체크
+    private Long pokemonCheck; // 상 - 898, 중 - 649, 하 - 493으로 포켓몬 몇명 뽑았는지 체크
     private boolean row; // 난이도 하
     private boolean mid; // 난이도 중
     private boolean high; // 난이도 상

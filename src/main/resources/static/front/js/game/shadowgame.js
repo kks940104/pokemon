@@ -14,7 +14,7 @@ window.addEventListener("DOMContentLoaded", function () {
       if (element.checked) {
         if (element.id === "requiredTerms0") {
           // 3세대
-          count = 386;
+          count = 493;
           content.innerText = "총 20문제입니다! \n 그림자이미지, 타입, 설명, 도감번호가 나옵니다!";
         }
         if (element.id === "requiredTerms1") {

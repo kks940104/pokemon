@@ -9,8 +9,6 @@ import org.koreait.games.services.*;
 import org.koreait.games.validators.ShadowGameValidators;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
-import org.koreait.global.paging.ListData;
-import org.koreait.member.entities.Member;
 import org.koreait.pokemon.entities.Pokemon;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -95,11 +93,11 @@ public class GameController {
     }
 
     @GetMapping("/shadowrank/{level}")
-    public String rankShow(@PathVariable("level") String level, Model model) {
-        commonProcess("game", model);
+    public String rankShow(@ModelAttribute RankSearch search, @PathVariable("level") String level, Model model) {
+        commonProcess("rank", model);
         Level lv = Level.valueOf(level);
-        List<GameRank> rank = rankInfoService.getRankList(lv);
-        model.addAttribute("rank", rank);
+        List<GameRank> ranks = rankInfoService.getRankList(lv);
+        model.addAttribute("ranks", ranks);
         return utils.tpl("game/ranklist");
     }
 
@@ -118,6 +116,8 @@ public class GameController {
             pageTitle = "포켓몬 게임시작";
             addCss.add("game/shadowstart");
             addScript.add("game/shadowstart");
+        } else if (mode.equals("rank")) {
+            addCss.add("game/ranklist");
         }
 
         // 페이지 제목

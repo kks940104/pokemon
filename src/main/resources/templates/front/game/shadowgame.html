@@ -15,7 +15,7 @@
                         <div class="terms-check-all">
                             <ul>
                                 <li>
-                                    <input type="radio" name="option" value="386" th:field="*{pokemonCheck}" id="requiredTerms0" class="radio-game">
+                                    <input type="radio" name="option" value="493" th:field="*{pokemonCheck}" id="requiredTerms0" class="radio-game">
                                     <label for="requiredTerms0" th:text="${#messages.msg('하')}"></label>
                                 </li>
                                 <li>
@@ -27,7 +27,7 @@
                                     <label for="requiredTerms2" th:text="${#messages.msg('상')}"></label>
                                 </li>
                             </ul>
-                            <span class="pokemonCount">386마리</span>
+                            <span class="pokemonCount">493마리</span>
                         </div>
                     </div>
                     <div class="game-description">
@@ -37,12 +37,12 @@
                     </div>
                     <div class="game-button">
                         <button class="game-start-btn" type="submit" th:text="#{게임시작}"></button>
+                        <button type="button" class="game-start-btn show-popup btn-white" th:data-url="@{/game/shadowrank/ROW}" th:data-width="900" th:data-height="700">랭킹</button>
                     </div>
                 </div>
             </section>
         </form>
         <div class="game-right-image"></div>
-        <button type="button" class="sbtn show-popup" th:data-url="@{/game/shadowrank/ROW}" th:data-width="900" th:data-height="700">랭킹</button>
 <!--        <th:block th:replace="~{front/game/_rank::common}"></th:block>-->
 </main>
 </html>
