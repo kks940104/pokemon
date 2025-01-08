@@ -195,7 +195,7 @@ commonLib.popupClose = function() {
 
 commonLib.loadEditor = function(id, height = 350) {
     if (typeof ClassicEditor === 'undefined' || !id) {
-        return;
+        return Promise.resolve();
     }
 
 
@@ -223,6 +223,13 @@ commonLib.loadEditor = function(id, height = 350) {
             }
         })();
     });
+};
+
+commonLib.insertEditorImage = function(imageUrls, editor) {
+    editor = editor ?? window.editor;
+    if (!editor) return;
+    imageUrls = typeof imageUrls === 'string' ? [imageUrls] : imageUrls;
+    editor.execute('insertImage', { source : imageUrls });
 };
 
 window.addEventListener("DOMContentLoaded", function () {
