@@ -42,6 +42,10 @@ public class BoardConfigUpdateService {
         board.setWriteAuthority(Objects.requireNonNullElse(form.getWriteAuthority(), Authority.ALL));
         board.setCommentAuthority(Objects.requireNonNullElse(form.getCommentAuthority(), Authority.ALL));
 
+        String locationAfterWriting = form.getLocationAfterWriting();
+
+        board.setLocationAfterWriting(StringUtils.hasText(locationAfterWriting) ? locationAfterWriting : "list");
+
         boardRepository.saveAndFlush(board);
     }
 

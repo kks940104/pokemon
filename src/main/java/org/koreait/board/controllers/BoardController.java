@@ -75,11 +75,26 @@ public class BoardController {
      * @param model
      * @return
      */
+    @GetMapping("/edit/{seq}")
     public String edit(@PathVariable("seq") Long seq, Model model) {
         commonProcess(seq, "edit", model);
 
         return utils.tpl("board/edit");
     }
+
+    /**
+     * 글등록, 수정 처리
+     * @return
+     */
+    @PostMapping("/save")
+    public String save(@SessionAttribute("commonValue") CommonValue commonValue) {
+        Board board = commonValue.getBoard();
+
+        // 글작성, 수정 성공 시 글보기 또는 글목록으로 이동
+        String redirectUrl = String.format("board/%s", board.getLocationAfterWriting().equals("view") ? "view/.." : "list/" + board.getBid());
+        return "redirect:" + redirectUrl;
+    }
+
 
     /**
      * 게시글 삭제
@@ -88,10 +103,12 @@ public class BoardController {
      * @return
      */
     @GetMapping("/delete/{seq}")
-    public String delete(@PathVariable("seq") Long seq, Model model) {
+    public String delete(@PathVariable("seq") Long seq, Model model,
+                         @SessionAttribute("commonValue") CommonValue commonValue) {
         commonProcess(seq, "delete", model);
 
-        return "redirect:/board/list/...";
+        Board board = commonValue.getBoard();
+        return "redirect:/board/list/" + board.getBid();
     }
 
     /**
@@ -114,6 +131,20 @@ public class BoardController {
         addScript.add(String.format("board/%s/common", board.getSkin()));
         addCss.add(String.format("board/%s/style", board.getSkin()));
 
+        if (mode.equals("add") || mode.equals("edit")) { // 글작성, 글수정 시
+            if (board.isUseEditor()) { // 에디터를 사용하는 경우
+                addCommonScript.add("ckeditor5/ckeditor");
+            } else { // 에디터를 사용하지 않는 경우 이미지 첨부 불가
+                board.setUseEditorImage(false);
+            }
+
+            // 파일 업로드가 필요한 설정이라면...
+            if (board.isUseAttachFile() || board.isUseEditorImage()) {
+                addCommonScript.add("fileManager");
+            }
+
+            addScript.add(String.format("board/%s/form", board.getSkin()));
+        }
         CommonValue commonValue = commonValue();
         commonValue.setBoard(board);
 

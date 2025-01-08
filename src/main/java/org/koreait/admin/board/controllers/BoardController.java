@@ -74,6 +74,7 @@ public class BoardController implements SubMenus {
         form.setViewAuthority(Authority.ALL);
         form.setWriteAuthority(Authority.ALL);
         form.setCommentAuthority(Authority.ALL);
+        form.setLocationAfterWriting("list");
         return "admin/board/add";
     }
 
