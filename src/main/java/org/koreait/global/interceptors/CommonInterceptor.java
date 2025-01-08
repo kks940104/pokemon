@@ -18,8 +18,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommonInterceptor implements HandlerInterceptor {
 
-    private final CodeValueService codeValueService;
     private final MemberUtil memberUtil;
+    private final CodeValueService codeValueService;
     private final MessageInfoService messageInfoService;
 
 /*    private List<String> excludeExtensions = List.of(".css", ".js", ".png", ".gif", ".jpg", ".jpeg", ".pdf", ".txt");*/

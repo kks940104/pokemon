@@ -151,7 +151,7 @@ public class MemberController {
         // 더이상 세션값을 추가하지 않겠다는 완료처리.
         status.setComplete();
 
-        // 회원가입 처리 완료 후 - 로그인 페이지로 이동
+        // 회원가입 처리 완료 후 - 로그인 -페이지로 이동
         return "redirect:/member/login";
     }
 

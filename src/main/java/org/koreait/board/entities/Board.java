@@ -5,11 +5,12 @@ import lombok.Data;
 import org.koreait.global.entities.BaseMemberEntity;
 import org.koreait.member.constants.Authority;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
-public class Board extends BaseMemberEntity {
+public class Board extends BaseMemberEntity implements Serializable {
 
     @Id
     @Column(length = 30)
