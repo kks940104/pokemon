@@ -7,6 +7,7 @@ import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
 import org.koreait.board.services.BoardInfoService;
 import org.koreait.board.services.BoardUpdateService;
+import org.koreait.board.services.BoardViewUpdateService;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
 import org.koreait.file.constants.FileStatus;
@@ -40,6 +41,7 @@ public class BoardController {
     private final BoardInfoService boardInfoService;
     private final BoardUpdateService boardUpdateService;
     private final BoardConfigInfoService configInfoService;
+    private final BoardViewUpdateService boardViewUpdateService;
 
     /**
      * 사용자별 공통 데이터
@@ -75,6 +77,10 @@ public class BoardController {
     @GetMapping("/view/{seq}")
     public String view(@PathVariable("seq") Long seq, Model model) {
         commonProcess(seq, "view", model);
+
+        long viewCount = boardViewUpdateService.process(seq); // 조회수 업데이트
+        BoardData data = (BoardData) model.getAttribute("boardData");
+        data.setViewCount(viewCount);
 
         return utils.tpl("board/view");
     }
@@ -119,7 +125,8 @@ public class BoardController {
     public String save(@Valid RequestBoard form, Errors errors, @SessionAttribute("commonValue") CommonValue commonValue, Model model) {
         String mode = form.getMode();
         mode = StringUtils.hasText(mode) ? mode : "write";
-        commonProcess(form.getBid(), mode, model);
+        if (mode.equals("edit")) commonProcess(form.getSeq(), mode, model);
+        else commonProcess(form.getBid(), mode, model);
 
         boardValidator.validate(form, errors);
 
@@ -201,6 +208,7 @@ public class BoardController {
         model.addAttribute("addCommonScript", addCommonScript);
         model.addAttribute("addScript", addScript);
         model.addAttribute("addCss", addCss);
+        model.addAttribute("mode", mode);
     }
 
     // 게시글 보기, 게시글 수정

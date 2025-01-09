@@ -68,6 +68,7 @@ public class BoardInfoService {
     public RequestBoard getForm(BoardData item) {
         RequestBoard form = modelMapper.map(item, RequestBoard.class);
         form.setMode("edit");
+        form.setBid(item.getBoard().getBid());
         return form;
     }
 

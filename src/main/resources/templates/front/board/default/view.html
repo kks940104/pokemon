@@ -19,10 +19,45 @@
                         </a>
                     </th:block>
                 </span>
+                <th:block th:text="#{조회수}"></th:block>
+                <th:block th:text="*{viewCount >= 1000L ? #numbers.formatInteger(viewCount, 3, 'COMMA') : viewCount}"></th:block>
             </div>
         </div>
+        <!--// post-info-->
+        <div class="right">
+            <span class="post-date" th:text="*{'IP : ' + ipAddr}"></span>
+            <span class="post-date">
+                <th:block th:text="#{작성일시}"></th:block>
+                <th:block th:text="*{#temporals.format(createdAt, 'yyyy.MM.dd HH:ss')}"></th:block>
+            </span>
+        </div>
+        <div class="content" th:utext="*{content}"></div>
+
+        <div th:if="*{prev != null}" class="post-navi prev">
+            <i class="xi-angle-left"></i>
+            <a th:href="@{/board/view/{seq}(seq=*{prev.seq})}" th:text="*{prev.subject}"></a>
+        </div>
+        <div th:if="*{next != null}" class="post-navi next">
+            <i class="xi-angle-right"></i>
+            <a th:href="@{/board/view/{seq}(seq=*{next.seq})}" th:text="*{next.subject}"></a>
+        </div>
+
+        <ul class="download-files" th:if="*{attachFiles != null && !attachFiles.isEmpty()}">
+            <li th:each="file, status : *{attachFiles}" th:object="${file}">
+                #<th:block th:text="${status.count}"></th:block>.
+                <a th:href="@{/api/file/download/{seq}(seq=*{seq})}" th:text="*{fileName}"></a>
+            </li>
+        </ul>
     </div>
     <!--// view-content -->
+    <div class="view-buttons">
+        <a th:href="@{/board/list/{bid}(bid=${board.bid})}" th:text="#{글목록}"></a>
+        <a th:href="@{/board/write/{bid}(bid=${board.bid})}" th:text="#{글쓰기}"></a>
+        <th:block th:if="${boardData.member == @memberUtil.getMember() || @memberUtil.isAdmin()}">
+            <a th:href="@{/board/edit/{seq}(seq=*{seq})}" th:text="#{글수정}"></a>
+            <a th:href="@{/board/delete/{seq}(seq=*{seq})}" th:text="#{글삭제}" onclick="return confirm('정말 삭제하겠습니까?')"></a>
+        </th:block>
+    </div>
     <th:block th:if="${board.useComment}">
         <th:block th:repalce="~{front/board/default/_comment::comment}"></th:block>
     </th:block>
