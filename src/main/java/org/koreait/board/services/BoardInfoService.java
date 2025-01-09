@@ -1,23 +1,29 @@
 package org.koreait.board.services;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.StringExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.koreait.board.controllers.BoardSearch;
-import org.koreait.board.entities.Board;
-import org.koreait.board.entities.BoardData;
-import org.koreait.board.entities.QBoardData;
+import org.koreait.board.controllers.RequestBoard;
+import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.exceptions.BoardDataNotFoundException;
 import org.koreait.board.repositories.BoardDataRepository;
-import org.koreait.board.services.configs.BoardConfigInfoService;
-import org.koreait.global.libs.Utils;
-import org.koreait.global.paging.ListData;
-import org.koreait.global.paging.Pagination;
+import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.context.annotation.Lazy;
+import org.koreait.board.controllers.BoardSearch;
+import org.koreait.file.services.FileInfoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import org.koreait.board.entities.QBoardData;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.koreait.board.entities.BoardData;
+import org.koreait.global.paging.Pagination;
 import org.springframework.util.StringUtils;
+import org.koreait.member.entities.Member;
+import org.koreait.global.paging.ListData;
+import org.koreait.member.libs.MemberUtil;
+import com.querydsl.core.BooleanBuilder;
+import org.koreait.board.entities.Board;
+import com.querydsl.jpa.impl.JPAQuery;
+import lombok.RequiredArgsConstructor;
+import org.koreait.global.libs.Utils;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
@@ -29,8 +35,11 @@ public class BoardInfoService {
 
     private final BoardConfigInfoService configInfoService;
     private final BoardDataRepository boardDataRepository;
+    private final FileInfoService fileInfoService;
     private final JPAQueryFactory queryFactory;
     private final HttpServletRequest request;
+    private final ModelMapper modelMapper;
+    private final MemberUtil memberUtil;
     private final Utils utils;
 
     /**
@@ -42,9 +51,24 @@ public class BoardInfoService {
 
         BoardData item = boardDataRepository.findById(seq).orElseThrow(BoardDataNotFoundException::new);
 
-        addInfo(item); // 추가 정보 처리
+        addInfo(item, true); // 추가 정보 처리
 
-        return null;
+        return item;
+    }
+
+    public RequestBoard getForm(Long seq) {
+        return getForm(get(seq));
+    }
+
+    /**
+     * 수정 처리 시 커멘드 객체 RequestBoard로 변환하는 기능
+     * @param item
+     * @return
+     */
+    public RequestBoard getForm(BoardData item) {
+        RequestBoard form = modelMapper.map(item, RequestBoard.class);
+        form.setMode("edit");
+        return form;
     }
 
     /**
@@ -57,7 +81,7 @@ public class BoardInfoService {
         Board board = null;
         int rowsPerPage = 0;
         List<String> bids = search.getBid();
-        if (bids != null && bids.isEmpty()) {
+        if (bids != null && !bids.isEmpty()) {
             board = configInfoService.get(bids.get(0));
             rowsPerPage = board.getRowsPerPage();
         }
@@ -74,6 +98,11 @@ public class BoardInfoService {
             andBuilder.and(boardData.board.bid.in(bids)); // eq랑 in 조건 어떻게 되는지 확인해보자.
         }
 
+        // 분류 검색
+        List<String> categories = search.getCategory();
+        if (categories != null && !categories.isEmpty()) {
+            andBuilder.and(boardData.category.in(categories));
+        }
         /**
          * 키워드 검색
          * sopt
@@ -112,7 +141,7 @@ public class BoardInfoService {
 
         // endregion
 
-        List<BoardData> items =
+        JPAQuery<BoardData> query =
                 queryFactory.selectFrom(boardData)
                         .leftJoin(boardData.board) // 지연로딩
                         .fetchJoin() // 이므로 빨리 가져오려고
@@ -120,10 +149,41 @@ public class BoardInfoService {
                         .fetchJoin()
                         .where(andBuilder)
                         .offset(offset)
-                        .limit(limit)
+                        .limit(limit);
                         // 공지사항이 가장 위로 가져오게
-                        .orderBy(boardData.notice.desc(), boardData.createdAt.desc())
-                        .fetch();
+                        // .orderBy(boardData.notice.desc(), boardData.createdAt.desc())
+                        // .fetch();
+
+        // 회원 이메일
+        List<String> emails = search.getEmail();
+        if (emails != null && emails.isEmpty()) {
+            andBuilder.and(boardData.member.email.in(emails));
+        }
+
+        // region 정렬 조건 처리
+
+        String sort = search.getSort();
+        if (StringUtils.hasText(sort)) {
+            String[] _sort = sort.split("_");
+            String field = _sort[0];
+            String direction = _sort[1];
+            if (field.equals("viewCount")) {
+                query.orderBy(direction.equalsIgnoreCase("DESC") ? boardData.viewCount.desc() : boardData.viewCount.asc());
+            } else if (field.equals("commentCount")) {
+                query.orderBy(direction.equalsIgnoreCase("DESC") ? boardData.commentCount.desc() : boardData.commentCount.asc());
+            } else if (field.equals("bestCount")) {
+                query.orderBy(direction.equalsIgnoreCase("DESC") ? boardData.bestCount.desc() : boardData.bestCount.asc());
+            } else {
+                query.orderBy(boardData.notice.desc(), boardData.createdAt.desc());
+            }
+        } else { // 기본 정렬 조건 - notice DESC, createdAt DESC
+            query.orderBy(boardData.notice.desc(), boardData.createdAt.desc());
+        }
+
+        // endregion
+
+
+        List<BoardData> items = query.fetch();
 
         long total = boardDataRepository.count();
 
@@ -169,11 +229,71 @@ public class BoardInfoService {
     }
 
     /**
+     * 로그인한 회원이 작성한 게시글 목록
+     * @param search
+     * @return
+     */
+    public ListData<BoardData> getMyList(BoardSearch search) {
+        if (!memberUtil.isLogin()) {
+            return new ListData<>(List.of(), null);
+        }
+
+        Member member = memberUtil.getMember();
+        String email = member.getEmail();
+        search.setEmail(List.of(email));
+
+        return getList(search);
+    }
+
+    /**
      * 추가 정보 처리
      * @param item
      */
-    private void addInfo(BoardData item) {
+    private void addInfo(BoardData item, boolean isView) {
+
+        // region 게시판 파일 정보
+
+        String gid = item.getGid();
+        item.setEditorImages(fileInfoService.getList(gid, "editor"));
+        item.setAttachFiles(fileInfoService.getList(gid, "attach"));
+
+        // endregion
+
+        // region 이전, 다음 게시글
+
+        if (isView) { // 보기 페이지 데이터를 조회하는 경우만 이전, 다음글을 조회
+            QBoardData boardData = QBoardData.boardData;
+            Long seq = item.getSeq();
+            BoardData prev = queryFactory.selectFrom(boardData)
+                    .where(boardData.seq.lt(seq)) // ~보다 작은 lt
+                    .orderBy(boardData.seq.desc())
+                    .fetchFirst();
+            BoardData next = queryFactory.selectFrom(boardData)
+                    .where(boardData.seq.gt(seq)) // ~보다 큰 gt
+                    .orderBy(boardData.seq.asc())
+                    .fetchFirst();
+            item.setPrev(prev);
+            item.setNext(next);
+        }
+
+        // endregion
 
     }
 
+    private void addInfo(BoardData item) {
+        addInfo(item, false);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+

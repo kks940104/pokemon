@@ -33,6 +33,8 @@ public class RequestBoard {
 
     private String externalLink; // 외부링크
     private String youtubeUrl; // 유튜브 주소
+    
+    private String category; // 게시글 분류
 
     private List<FileInfo> editorImages; // 사진
     private List<FileInfo> attachFiles; // 첨부파일

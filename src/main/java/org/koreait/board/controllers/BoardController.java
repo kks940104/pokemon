@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.services.BoardInfoService;
 import org.koreait.board.services.BoardUpdateService;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
@@ -12,6 +13,7 @@ import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.paging.ListData;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +37,7 @@ public class BoardController {
     private final MemberUtil memberUtil;
     private final BoardValidator boardValidator;
     private final FileInfoService fileInfoService;
+    private final BoardInfoService boardInfoService;
     private final BoardUpdateService boardUpdateService;
     private final BoardConfigInfoService configInfoService;
 
@@ -54,10 +57,14 @@ public class BoardController {
      * @return
      */
     @GetMapping("/list/{bid}")
-    public String list(@PathVariable("bid") String bid, Model model) {
+    public String list(@PathVariable("bid") String bid, BoardSearch search, Model model) {
         commonProcess(bid, "list", model);
+        ListData<BoardData> data = boardInfoService.getList(bid, search);
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("pagination", data.getPagination());
         return utils.tpl("board/list");
     }
+
 
     /**
      * 게시글 보기
@@ -68,6 +75,7 @@ public class BoardController {
     @GetMapping("/view/{seq}")
     public String view(@PathVariable("seq") Long seq, Model model) {
         commonProcess(seq, "view", model);
+
         return utils.tpl("board/view");
     }
 
@@ -95,8 +103,10 @@ public class BoardController {
      * @return
      */
     @GetMapping("/edit/{seq}")
-    public String edit(@PathVariable("seq") Long seq, Model model) {
+    public String edit(@PathVariable("seq") Long seq, Model model, @SessionAttribute("commonValue") CommonValue commonValue) {
         commonProcess(seq, "edit", model);
+        RequestBoard form = boardInfoService.getForm(commonValue.getData());
+        model.addAttribute("requestBoard", form);
 
         return utils.tpl("board/edit");
     }
@@ -156,7 +166,7 @@ public class BoardController {
         List<String> addCss = new ArrayList<>();
 
         // 게시판 공통 CSS, JS
-        addScript.add("add/common"); // 모든 게시판에서 사용하게 될 공통 자바스크립트.
+        addScript.add("board/common"); // 모든 게시판에서 사용하게 될 공통 자바스크립트.
         addCss.add("board/style"); // 게시판 공통 스타일시트
 
         // 게시판 스킨별 CSS, JS
@@ -177,26 +187,43 @@ public class BoardController {
 
             addScript.add(String.format("board/%s/form", board.getSkin()));
         }
-        CommonValue commonValue = commonValue();
-        commonValue.setBoard(board);
+
+        // 게시글 번호가 있는 mode가 view이거나 edit인 경우는 배제.
+        if (!List.of("view", "edit").contains(mode)) {
+            CommonValue commonValue = commonValue();
+            commonValue.setBoard(board);
+            model.addAttribute("commonValue", commonValue);
+            model.addAttribute("pageTitle", pageTitle);
+        }
 
         model.addAttribute("board", board);
-        model.addAttribute("commonValue", commonValue);
+        model.addAttribute("categories", board.getCategories());
         model.addAttribute("addCommonScript", addCommonScript);
         model.addAttribute("addScript", addScript);
         model.addAttribute("addCss", addCss);
-        model.addAttribute("pageTitle", pageTitle);
     }
 
+    // 게시글 보기, 게시글 수정
     private void commonProcess(Long seq, String mode, Model model) {
-        String bid = null;
-
+        BoardData item = boardInfoService.get(seq);
+        Board board = item.getBoard();
+        String pageTitle = String.format("%s - %s",item.getSubject(), board.getName());
+        String bid = board.getBid();
         commonProcess(bid, mode, model);
+
+        CommonValue commonValue = commonValue();
+        commonValue.setBoard(board);
+        commonValue.setData(item);
+
+        model.addAttribute("commonValue", commonValue);
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("boardData", item);
     }
 
     @Data
     static class CommonValue implements Serializable {
         private Board board;
+        private BoardData data;
     }
 }
 
