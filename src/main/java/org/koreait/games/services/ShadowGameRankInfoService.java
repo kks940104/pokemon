@@ -35,17 +35,6 @@ public class ShadowGameRankInfoService {
         String skey = search.getSkey(); // 검색 키워드
         sopt = StringUtils.hasText(sopt) ? sopt : "ALL";
 
-/*
-        if (StringUtils.hasText(skey)) {
-            builder.and(gameRank.member.name
-                    .concat(gameRank.member.email)
-                    .concat(gameRank.member.nickName)
-                    .contains(skey));
-        }
-*/
-
-
-
         if (StringUtils.hasText(skey)) {
             skey = skey.trim();
             StringExpression condition;
