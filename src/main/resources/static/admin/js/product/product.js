@@ -54,7 +54,7 @@ function callbackFileUpload(files) {
        const el = dom.querySelector(".file-item, .image-item");
        const insertEditor = el.querySelector(".insert-editor");
        if (insertEditor) {
-            insertEditor.addEventListener("click" () => insertEditorImage(fileUrl));
+            insertEditor.addEventListener("click", () => insertEditorImage(fileUrl));
        }
 
        const removeEl = el.querySelector(".remove");
