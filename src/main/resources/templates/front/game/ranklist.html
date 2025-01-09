@@ -4,31 +4,46 @@
       layout:decorate="~{front/layouts/popup}">
 <th:block th:fragment="content">
     <section class="rank-system">
-        <form name="frmRank" method="GET" th:object="${rankSearch}">
-            <table class="table-cols">
-                <tr>
-                    <th width="180">레벨</th>
-                    <td>
-                        <span class="radio">
-
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>통합 검색</th>
-                    <td class="flex">
-                        <select name="sopt" th:field="*{sopt}" class="w180 mr5">
-                            <option value="ALL">통합검색</option>
-                            <option value="EMAIL">이메일</option>
-                            <option value="NAME">이름</option>
-                            <option value="NICKNAME">닉네임</option>
-                        </select>
-                        <input type="text" name="skey" th:field="*{skey}" placeholder="검색할 키워드를 입력하세요.">
-                        <button type="submit" class="submit-btn">검색하기</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
+<!--        <th:block th:object="${rankSearch}">-->
+            <!--<form name="frmRank" method="POST" autocomplete="off" th:action="@{/game/shadowrank}">
+                <table class="table-cols">
+                    <tr>
+                        <th width="180">레벨</th>
+                        <td>
+                            <span class="radio">
+                                <input type="radio" name="open" value="ROW" th:field="*{level}" id="level-row" onclick="frmRank.submit()">
+                                <label for="level-row" onclick="frmRank.submit()">ROW</label>
+                            </span>
+                            <span class="radio">
+                                <input type="radio" name="open" value="MID" th:field="*{level}" id="level-mid" onclick="frmRank.submit()">
+                                <label for="level-mid" onclick="frmRank.submit()">MID</label>
+                            </span>
+                            <span class="radio">
+                                <input type="radio" name="open" value="HIGH" th:field="*{level}" id="level-high" onclick="frmRank.submit()">
+                                <label for="level-high" onclick="frmRank.submit()">HIGH</label>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </form>-->
+<!--            <form name="frmRankSearch" method="POST" autocomplete="off" th:action="@{/game/shadowrank}">
+                <table class="table-cols">
+                    <tr>
+                        <th width="180">통합 검색</th>
+                        <td class="flex">
+                            <select name="sopt" th:field="*{sopt}" class="w180 mr5">
+                                <option value="ALL">통합검색</option>
+                                <option value="EMAIL">이메일</option>
+                                <option value="NAME">이름</option>
+                                <option value="NICKNAME">닉네임</option>
+                            </select>
+                            <input type="text" name="skey" th:field="*{skey}" placeholder="검색할 키워드를 입력하세요.">
+                            <button type="submit" class="submit-btn">검색하기</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </th:block>-->
         <table class="table-rows">
             <thead>
             <tr>
@@ -46,7 +61,12 @@
                 <td colspan="7" class="no-data">조회된 회원이 없습니다.</td>
             </tr>
             <tr th:unless="${ranks == null}" th:each="rank, status : ${ranks}" th:object="${rank}">
-                <td th:text="${status.index + 1}"></td>
+                <th:block th:if="*{ranking < 1}">
+                    <td th:text="${status.index + 1}"></td>
+                </th:block>
+                <th:block th:unless="*{ranking < 1}">
+                    <td th:text="${ranking}"></td>
+                </th:block>
                 <td align="center">
                     <span th:text="*{member.name}"></span>
                 </td>

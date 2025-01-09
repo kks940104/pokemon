@@ -3,6 +3,7 @@ package org.koreait.games.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.koreait.games.constants.Level;
 import org.koreait.games.entitis.GameRank;
 import org.koreait.games.services.*;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @ApplyErrorPage
 @RequiredArgsConstructor
@@ -44,6 +46,11 @@ public class GameController {
     @ModelAttribute("requestShadowGame")
     public RequestShadowGame requestShadowGame() {
         return new RequestShadowGame();
+    }
+
+    @ModelAttribute("rankSearch")
+    public RankSearch rankSearch() {
+        return new RankSearch();
     }
 
 
@@ -92,11 +99,27 @@ public class GameController {
         return utils.tpl("game/shadowstart_ps");
     }
 
-    @GetMapping("/shadowrank/{level}")
-    public String rankShow(@ModelAttribute RankSearch search, @PathVariable("level") String level, Model model) {
+    @GetMapping("/shadowrank")
+    public String rankShow(/*@ModelAttribute RankSearch search, */Model model) {
         commonProcess("rank", model);
-        Level lv = Level.valueOf(level);
-        List<GameRank> ranks = rankInfoService.getRankList(lv);
+        List<GameRank> ranks = rankInfoService.getRankList(Level.ROW);
+        System.out.println("ranks : " + ranks);
+        model.addAttribute("ranks", ranks);
+        return utils.tpl("game/ranklist");
+    }
+
+    @PostMapping("/shadowrank")
+    public String rankShow2(/*@ModelAttribute RankSearch search, */Model model) {
+/*        commonProcess("rank", model);
+        GameRank ranks = rankInfoService.getRank(search.getLevel(), search);
+        System.out.println("ranks : " + ranks);
+        model.addAttribute("ranks", ranks);
+        return utils.tpl("game/ranklist");*/
+
+
+        commonProcess("rank", model);
+        List<GameRank> ranks = rankInfoService.getRankList(Level.ROW);
+        System.out.println("ranks : " + ranks);
         model.addAttribute("ranks", ranks);
         return utils.tpl("game/ranklist");
     }

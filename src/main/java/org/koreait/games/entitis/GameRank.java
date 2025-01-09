@@ -28,4 +28,7 @@ public class GameRank extends BaseEntity {
 
     @Transient
     private double winning; // 승률 2차가공
+
+    @Transient
+    private int ranking;
 }

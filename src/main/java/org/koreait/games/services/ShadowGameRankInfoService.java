@@ -27,7 +27,7 @@ public class ShadowGameRankInfoService {
     private final ShadowGameRepository repository;
     private final MemberUtil memberUtil;
 
-    public int getRank(Level level, RankSearch search) {
+    public GameRank getRank(Level level, RankSearch search) {
         QGameRank gameRank = QGameRank.gameRank;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -58,10 +58,11 @@ public class ShadowGameRankInfoService {
         GameRank user = repository.findById(gameRankId).orElseGet(null);
 
         if (user != null) {
+            user.setRanking(rank.indexOf(user) + 1);
             addInfo(user);
-            return rank.indexOf(user) + 1;
+            return user;
         } else {
-            return -1;
+            return null;
         }
     }
 
