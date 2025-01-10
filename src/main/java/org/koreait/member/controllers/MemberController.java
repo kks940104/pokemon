@@ -6,10 +6,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
+import org.koreait.global.services.CodeValueService;
 import org.koreait.member.MemberInfo;
 import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.MemberInfoService;
 import org.koreait.member.services.MemberUpdateService;
+import org.koreait.member.social.constants.SocialChannel;
+import org.koreait.member.social.entites.SocialConfig;
+import org.koreait.member.social.services.KakaoLoginService;
 import org.koreait.member.validators.JoinValidator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,19 +27,22 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Controller
 @ApplyErrorPage
 @RequestMapping("/member")
 @RequiredArgsConstructor
-@SessionAttributes({"requestAgree", "requestLogin", "authCodeVerified"}) // 데이터를 유지하기 위함. -> Session에 저장.
+@SessionAttributes({"requestAgree", "requestLogin", "authCodeVerified", "socialChannel", "socialToken"}) // 데이터를 유지하기 위함. -> Session에 저장.
 public class MemberController {
+
     private final Utils utils;
-    private final MemberUtil memberUtil;
     private final JoinValidator joinValidator; // 회원 가입 검증
     private final MemberInfoService infoService; // 회원 정보 조회.
     private final MemberUpdateService updateService; // 회원 가입 처리
+    private final CodeValueService codeValueService; // 소셜 로그인 설정
+    private final KakaoLoginService kakaoLoginService;
 
     @ModelAttribute("requestAgree")
     public RequestAgree requestAgree() {
@@ -53,9 +60,24 @@ public class MemberController {
         return false;
     }
 
+    @ModelAttribute("socialChannel")
+    public SocialChannel socialChannel() {
+        return SocialChannel.NONE;
+    }
+
+    @ModelAttribute("socialToken")
+    public String socialToken() {
+        return null;
+    }
+
     @GetMapping("/login")
-    public String login(@ModelAttribute RequestLogin form, Errors errors, Model model) {
+    public String login(@ModelAttribute RequestLogin form, Errors errors, Model model, HttpSession session) {
         commonProcess("login", model); // 로그인 페이지 공통 처리
+        session.setAttribute("socialChannel", SocialChannel.NONE);
+        session.setAttribute("socialToken", null);
+
+        form.setKakaoLoginUrl(kakaoLoginService.getLoginUrl(form.getRedirectUrl()));
+
         if (form.getErrorCodes() != null) { // 검증 실패 시
             form.getErrorCodes().stream()
                     .map(s -> s.split("_"))
@@ -99,6 +121,7 @@ public class MemberController {
     @GetMapping("/agree")
     public String joinAgree(Model model) {
         commonProcess("agree", model); // 회원가입 공통처리
+
         return utils.tpl("member/agree");
     }
 
@@ -109,8 +132,11 @@ public class MemberController {
      * @return
      */
     @PostMapping("/join")
-    public String join(RequestAgree agree, Errors errors, @ModelAttribute RequestJoin form, Model model) {
+    public String join(RequestAgree agree, Errors errors, @ModelAttribute RequestJoin form, Model model, @SessionAttribute(name = "socialChannel", required = false) SocialChannel socialChannel, @SessionAttribute(name = "socialToken", required = false) String socialToken) {
         commonProcess("join", model); // 회원가입 공통처리
+        form.setSocialChannel(socialChannel);
+        form.setSocialToken(socialToken);
+
         // 회원가입 양식 첫 유입에서는 이메일인증 상태를 false
         model.addAttribute("authCodeVerified", false);
 
@@ -130,7 +156,7 @@ public class MemberController {
      */
     @PostMapping("/join_ps")
     // SessionAttribute을 통해 Session 값에 저장된걸 가지고 온거.
-    public String joinPs(@SessionAttribute("requestAgree") RequestAgree agree, @Valid RequestJoin form, Errors errors, SessionStatus status, Model model) {
+    public String joinPs(@SessionAttribute("requestAgree") RequestAgree agree, @Valid RequestJoin form, Errors errors, SessionStatus status, Model model, HttpSession session) {
         commonProcess("join", model);
 
         joinValidator.validate(agree, errors); // 약관 동의 여부 체크
@@ -150,6 +176,11 @@ public class MemberController {
 
         // 더이상 세션값을 추가하지 않겠다는 완료처리.
         status.setComplete();
+
+        // 인증 관련 세션정보 삭제
+        session.removeAttribute("socialToken");
+        session.removeAttribute("socialChannel");
+        session.removeAttribute("authCodeVerified");
 
         // 회원가입 처리 완료 후 - 로그인 -페이지로 이동
         return "redirect:/member/login";
@@ -176,6 +207,10 @@ public class MemberController {
         String pageTitle = null; // 페이지 제목
         List<String> addCommonScript = new ArrayList<>(); // 공통 자바스크립트
         List<String> addScript = new ArrayList<>(); // 프론트쪽에 추가하는 자바 스크립트
+
+        // 소셜 로그인 설정
+        SocialConfig socialConfig = Objects.requireNonNullElseGet(codeValueService.get("socialConfig", SocialConfig.class), SocialConfig::new);
+
         if(mode.equals("login")) { // 로그인 공통 처리
             pageTitle = utils.getMessage("로그인");
         } else if (mode.equals("join")) { // 회원가입 공통 처리
@@ -196,6 +231,9 @@ public class MemberController {
 
         // front 스크립트
         model.addAttribute("addScript", addScript);
+
+        // 소셜 로그인 설정
+        model.addAttribute("socialConfig", socialConfig);
 
     }
 }

@@ -8,6 +8,7 @@ import org.koreait.file.entites.FileInfo;
 import org.koreait.global.entities.BaseEntity;
 import org.koreait.member.constants.Gender;
 import org.koreait.member.social.constants.SocialChannel;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class Member extends BaseEntity implements Serializable {
     @Column(length = 65, nullable = false, unique = true)
     private String email; // 이메일
 
-    @Column(length = 65, nullable = false)
+    @Column(length = 65)
     private String password; // 비밀번호
 
     @Column(length = 40, nullable = false)
@@ -75,4 +76,25 @@ public class Member extends BaseEntity implements Serializable {
 
     @Transient
     private FileInfo profileImage;
+
+    // 카카오 로그인 연동된 상태 체크.
+    public boolean isKakaoConnected() {
+        return socialChannel != null && socialChannel == socialChannel.KAKAO && StringUtils.hasText(socialToken);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

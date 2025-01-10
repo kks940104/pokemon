@@ -9,6 +9,7 @@ import org.koreait.member.reporitories.MemberRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
@@ -82,6 +83,7 @@ public class JoinValidator implements Validator, PasswordValidator {
         String password = form.getPassword();
         String confirmPassword = form.getConfirmPassword();
         LocalDate birthDt = form.getBirthDt();
+        boolean isSocial = form.isSocial(); // 소셜 로그인 여부
 
 
         // region 1. 이메일 중복 여부 체크
@@ -92,18 +94,29 @@ public class JoinValidator implements Validator, PasswordValidator {
 
         // endregion
 
-        // region 2. 비밀번호 복잡성
+        // region 2,3. 비밀번호 복잡성 체크
 
-        if (!alphaCheck(password, false) || !numberCheck(password) || !specialCharsCheck(password)) {
-            errors.rejectValue("password", "Complexity");
-        }
+        if (!isSocial) {
+            // 필수 여부 체크
 
-        // endregion
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotBlank");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "NotBlank");
 
-        // region 3. 비밀번호, 비밀번호 확인 일치 여부
+            // region 2. 비밀번호 복잡성
 
-        if (!password.equals(confirmPassword)) {
-            errors.rejectValue("confirmPassword","Mismatch");
+            if (!alphaCheck(password, false) || !numberCheck(password) || !specialCharsCheck(password)) {
+                errors.rejectValue("password", "Complexity");
+            }
+
+            // endregion
+
+            // region 3. 비밀번호, 비밀번호 확인 일치 여부
+
+            if (!password.equals(confirmPassword)) {
+                errors.rejectValue("confirmPassword", "Mismatch");
+            }
+
+            // endregion
         }
 
         // endregion

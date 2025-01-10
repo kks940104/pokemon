@@ -8,19 +8,18 @@ import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.libs.Utils;
 import org.koreait.global.paging.CommonSearch;
 import org.koreait.global.paging.ListData;
-import org.koreait.global.paging.Pagination;
 import org.koreait.member.MemberInfo;
 import org.koreait.member.entities.Member;
 import org.koreait.member.libs.MemberUtil;
 import org.koreait.member.services.MemberInfoService;
 import org.koreait.member.services.MemberUpdateService;
+import org.koreait.member.social.services.KakaoLoginService;
 import org.koreait.mypage.validators.ProfileValidator;
 import org.koreait.pokemon.controllers.PokemonSearch;
 import org.koreait.pokemon.entities.Pokemon;
 import org.koreait.pokemon.services.PokemonInfoService;
 import org.koreait.wishlist.constants.WishType;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -42,9 +41,10 @@ public class MypageController {
     private final Utils utils;
     private final MemberUtil memberUtil;
     private final ModelMapper modelMapper;
+    private final MemberInfoService infoService;
     private final MemberUpdateService updateService;
     private final ProfileValidator profileValidator;
-    private final MemberInfoService infoService;
+    private final KakaoLoginService kakaoLoginService;
     private final PokemonInfoService pokemonInfoService;
 
     // 이 문제는 수정하게 된다면 수정이 되지 않음.
@@ -70,6 +70,9 @@ public class MypageController {
         if (StringUtils.hasText(optionalTerms)) {
             form.setOptionalTerms(Arrays.stream(optionalTerms.split("\\|\\|")).toList());
         }
+
+        form.setKakaoLoginConnectUrl(kakaoLoginService.getLoginUrl("connect"));
+        form.setKakaoLoginDisconnectUrl(kakaoLoginService.getLoginUrl("disconnect"));
         model.addAttribute("requestProfile", form);
 
         //region 이전 코드

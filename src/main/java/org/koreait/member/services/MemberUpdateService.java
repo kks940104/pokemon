@@ -31,14 +31,14 @@ import java.util.List;
 @Transactional
 public class MemberUpdateService {
 
+    private final Utils utils;
+    private final HttpSession session;
+    private final MemberUtil memberUtil;
+    private final ModelMapper modelMapper;
+    private final MemberInfoService infoService;
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final AuthoritiesRepository authoritiesRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final ModelMapper modelMapper;
-    private final MemberUtil memberUtil;
-    private final MemberInfoService infoService;
-    private final HttpSession session;
-    private final Utils utils;
 
 
     /**
@@ -58,9 +58,14 @@ public class MemberUpdateService {
 
 
         // 비밀번호 해시화 - BCrypt
-        String hash = passwordEncoder.encode(form.getPassword());
-        member.setPassword(hash);
-        member.setCredentialChangedAt(LocalDateTime.now());
+        if (!form.isSocial()) {
+            String hash = passwordEncoder.encode(form.getPassword());
+            member.setPassword(hash);
+            member.setCredentialChangedAt(LocalDateTime.now());
+        }
+        // 소셜 로그인 관련
+        member.setSocialChannel(form.getSocialChannel());
+        member.setSocialToken(form.getSocialToken());
 
         // 회원 권한
         Authorities auth = new Authorities();
