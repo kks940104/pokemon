@@ -51,7 +51,6 @@ public class FileInfo extends BaseMemberEntity implements Serializable {
 
     // 이미지 형식 여부. 썸네일때문에 추가.
     public boolean isImage() {
-
         return StringUtils.hasText(contentType) && contentType.contains("image/");
     }
 }
