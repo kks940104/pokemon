@@ -21,7 +21,7 @@ public class ShadowGameSettingService {
         form.setGameCorrectAnswer(0);
         form.setGameWrongAnswer(0);
         form.setGameCount(1);
-        Collections.addAll(pokemonCounts,LongStream.range(1L, form.getPokemonCheck() + 1L).boxed().toArray(Long[]::new));
+        Collections.addAll(pokemonCounts, LongStream.range(1L, form.getPokemonCheck() + 1L).boxed().toArray(Long[]::new));
         levelSetting(form, form.getPokemonCheck());
 
         return pokemonCounts;
