@@ -3,6 +3,7 @@ package org.koreait.board.services;
 import jakarta.servlet.http.HttpSession;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.exceptions.BoardNotFoundException;
 import org.koreait.board.exceptions.GuestPasswordCheckException;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.global.libs.Utils;
@@ -45,6 +46,11 @@ public class BoardAuthService {
         }
         
         Board board = configInfoService.get(bid);
+
+        // 게시판 사용 여부 체크
+        if (!board.isOpen()) {
+           throw new BoardNotFoundException();
+        }
 
         /**
          * mode - write, List / bid check
