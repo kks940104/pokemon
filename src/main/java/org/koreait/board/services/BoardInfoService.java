@@ -5,6 +5,7 @@ import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.exceptions.BoardDataNotFoundException;
 import org.koreait.board.repositories.BoardDataRepository;
 import com.querydsl.core.types.dsl.StringExpression;
+import org.koreait.member.constants.Authority;
 import org.springframework.context.annotation.Lazy;
 import org.koreait.board.controllers.BoardSearch;
 import org.koreait.file.services.FileInfoService;
@@ -276,6 +277,28 @@ public class BoardInfoService {
             item.setPrev(prev);
             item.setNext(next);
         }
+
+        // endregion
+
+        // region listable, writable, editable, mine 처리
+
+        Board board = item.getBoard();
+        configInfoService.addInfo(board);
+
+        boolean listable = board.isListable();
+        boolean writable = board.isWritable();
+
+        Member member = item.getMember();
+        Member loggedMember = memberUtil.getMember();
+
+        boolean editable = member == null || (memberUtil.isLogin() && loggedMember.getEmail().equals(member.getEmail())); // 비회원은 비밀번호 확인이 필요하므로 버튼 노출, 회원 게시글은 로그인한 회원과 일치하면 노출.
+
+        boolean mine = request.getSession().getAttribute("board_" + item.getSeq()) != null || (member != null && memberUtil.isLogin() && loggedMember.getEmail().equals(member.getEmail()));
+
+        item.setListable(listable);
+        item.setWritable(writable);
+        item.setEditable(editable);
+        item.setMine(mine);
 
         // endregion
 

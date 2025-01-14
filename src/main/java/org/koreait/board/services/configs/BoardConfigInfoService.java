@@ -13,6 +13,8 @@ import org.koreait.board.exceptions.BoardNotFoundException;
 import org.koreait.board.repositories.BoardRepository;
 import org.koreait.global.paging.ListData;
 import org.koreait.global.paging.Pagination;
+import org.koreait.member.constants.Authority;
+import org.koreait.member.libs.MemberUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -32,9 +34,10 @@ import static org.springframework.data.domain.Sort.Order.desc;
 @Service
 @RequiredArgsConstructor
 public class BoardConfigInfoService {
-    private final BoardRepository repository;
-    private final HttpServletRequest request;
+    private final MemberUtil memberUtil;
     private final ModelMapper modelMapper;
+    private final HttpServletRequest request;
+    private final BoardRepository repository;
 
     /**
      * 게시판 설정 하나 조회
@@ -110,7 +113,7 @@ public class BoardConfigInfoService {
      * 추가 정보 처리 - 분류에 대해
      * @param item
      */
-    private void addInfo(Board item) {
+    public void addInfo(Board item) {
         String category = item.getCategory();
         if (StringUtils.hasText(category)) {
             List<String> categories = Arrays.stream(category.split("\\n"))
@@ -121,6 +124,19 @@ public class BoardConfigInfoService {
 
             item.setCategories(categories);
         }
+
+        // region listable, writable 처리
+
+        Authority listAuthority = item.getListAuthority();
+        boolean listable = listAuthority == Authority.ALL || (listAuthority == Authority.USER && memberUtil.isLogin()) || (listAuthority == Authority.ADMIN && memberUtil.isAdmin());
+
+        Authority writeAuthority = item.getWriteAuthority();
+        boolean writable = writeAuthority == Authority.ALL || (writeAuthority == Authority.USER && memberUtil.isLogin()) || (writeAuthority == Authority.ADMIN && memberUtil.isAdmin());
+
+        item.setListable(listable);
+        item.setWritable(writable);
+
+        // endregion
     }
 }
 
