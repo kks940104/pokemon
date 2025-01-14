@@ -10,7 +10,7 @@ public class RequestComment {
 
     @NotBlank
     private String commenter;
-    
+
     private String guestPw;
 
     @NotBlank
