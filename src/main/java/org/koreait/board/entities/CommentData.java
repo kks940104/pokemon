@@ -20,6 +20,9 @@ public class CommentData extends BaseEntity {
     @Column(length = 40, nullable = false)
     private String commenter;
 
+    @Column(length = 65)
+    private String guestPw; // 비회원 비밀번호
+
     @Lob
     @Column(nullable = false)
     private String content;
