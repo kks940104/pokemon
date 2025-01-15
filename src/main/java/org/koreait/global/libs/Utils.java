@@ -5,6 +5,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.koreait.file.entites.FileInfo;
 import org.koreait.file.services.FileInfoService;
+import org.koreait.global.constants.Device;
+import org.koreait.global.entities.SiteConfig;
+import org.koreait.global.services.CodeValueService;
 import org.koreait.member.libs.MemberUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -20,10 +23,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Utils {
 
-    private final FileInfoService fileInfoService;
-    private final MessageSource messageSource;
-    private final HttpServletRequest request;
     private final MemberUtil memberUtil;
+    private final HttpServletRequest request;
+    private final MessageSource messageSource;
+    private final FileInfoService fileInfoService;
+    private final CodeValueService codeValueService;
 
     public boolean isMobile() {
 
@@ -42,7 +46,12 @@ public class Utils {
      * @return
      */
     public String tpl(String path) {
+        SiteConfig config = codeValueService.get("siteConfig", SiteConfig.class);
         String prefix = isMobile() ? "mobile" : "front";
+
+        if (config != null && config.getDevice() != Device.ALL) {
+            prefix = config.getDevice() == Device.MOBILE ? "mobile" : "front";
+        }
 
         return String.format("%s/%s", prefix, path);
     }

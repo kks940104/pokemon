@@ -9,6 +9,7 @@ import org.koreait.admin.global.menu.MenuDetail;
 import org.koreait.admin.global.menu.Menus;
 import org.koreait.admin.global.menu.SubMenus;
 import org.koreait.global.annotations.ApplyErrorPage;
+import org.koreait.global.constants.Device;
 import org.koreait.global.entities.SiteConfig;
 import org.koreait.global.entities.Terms;
 import org.koreait.global.libs.Utils;
@@ -56,7 +57,8 @@ public class BasicController implements SubMenus {
     public String siteConfig (Model model) {
         commonProcess("siteConfig", model);
         SiteConfig form = Objects.requireNonNullElseGet(codeValueService.get("siteConfig", SiteConfig.class), SiteConfig::new);
-        System.out.println(form);
+
+        form.setDevice(Objects.requireNonNullElse(form.getDevice(), Device.ALL));
         model.addAttribute("siteConfig", form);
 
         return "admin/basic/siteConfig";
