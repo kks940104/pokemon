@@ -58,7 +58,7 @@
         <a th:if="*{editable}" th:href="@{/board/delete/{seq}(seq=*{seq})}" th:text="#{글삭제}" onclick="return confirm('정말 삭제하겠습니까?')"></a>
     </div>
     <th:block th:if="${board.useComment}">
-        <th:block th:repalce="~{front/board/default/_comment::comment}"></th:block>
+        <th:block th:replace="~{front/board/default/_comment::comment}"></th:block>
     </th:block>
 
     <th:block th:if="${board.listUnderView}">

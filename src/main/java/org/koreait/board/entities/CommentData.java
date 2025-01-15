@@ -15,7 +15,7 @@ public class CommentData extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private BoardData boardData;
+    private BoardData data;
 
     @Column(length = 40, nullable = false)
     private String commenter;

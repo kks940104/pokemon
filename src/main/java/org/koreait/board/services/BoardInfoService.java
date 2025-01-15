@@ -308,6 +308,27 @@ public class BoardInfoService {
         addInfo(item, false);
     }
 
+    /**
+     * 게시글 번호와 게시판 아이디로 현재 페이지 구하기.
+     *
+     * @param bid
+     * @param seq
+     * @param limit
+     * @return
+     */
+    public int getPage(String bid, Long seq, int limit) {
+        QBoardData boardData = QBoardData.boardData;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(boardData.board.bid.eq(bid))
+                .and(boardData.seq.goe(seq)); // 크거나 같다.
+
+        long total = boardDataRepository.count(builder);
+        int page = (int) Math.ceil((double) total / limit);
+
+        return page;
+    }
+
 }
 
 

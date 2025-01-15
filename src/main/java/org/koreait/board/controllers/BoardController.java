@@ -1,5 +1,6 @@
 package org.koreait.board.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.Data;
@@ -10,12 +11,14 @@ import org.koreait.board.exceptions.GuestPasswordCheckException;
 import org.koreait.board.services.*;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
+import org.koreait.board.validators.CommentValidator;
 import org.koreait.file.constants.FileStatus;
 import org.koreait.file.services.FileInfoService;
 import org.koreait.global.annotations.ApplyErrorPage;
 import org.koreait.global.entities.SiteConfig;
 import org.koreait.global.exceptions.BadRequestException;
 import org.koreait.global.exceptions.scripts.AlertBackException;
+import org.koreait.global.exceptions.scripts.AlertException;
 import org.koreait.global.libs.Utils;
 import org.koreait.global.paging.ListData;
 import org.koreait.global.services.CodeValueService;
@@ -24,6 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -41,8 +46,10 @@ public class BoardController {
 
     private final Utils utils;
     private final MemberUtil memberUtil;
+    private final HttpServletRequest request;
     private final BoardValidator boardValidator;
     private final FileInfoService fileInfoService;
+    private final CommentValidator commentValidator;
     private final BoardInfoService boardInfoService;
     private final BoardAuthService boardAuthService;
     private final CodeValueService codeValueService;
@@ -92,7 +99,9 @@ public class BoardController {
 
         Board board = data.getBoard();
         if (board.isListUnderView()) { // 보기페이지 하단에 게시글 목록 출력
-            ListData<BoardData> listData = boardInfoService.getList(board.getBid(), new BoardSearch());
+            BoardSearch search = new BoardSearch();
+            search.setPage(boardInfoService.getPage(board.getBid(), seq, board.getRowsPerPage()));
+            ListData<BoardData> listData = boardInfoService.getList(board.getBid(), search);
             model.addAttribute("items", listData.getItems());
             model.addAttribute("pagination", listData.getPagination());
         }
@@ -101,6 +110,8 @@ public class BoardController {
         if (board.isUseComment() && memberUtil.isLogin()) {
             form.setCommenter(memberUtil.getMember().getName());
         }
+        form.setMode("write");
+        form.setTarget("ifrmProcess");
 
         return utils.tpl("board/view");
     }
@@ -179,6 +190,43 @@ public class BoardController {
         boardDeleteService.delete(seq);
 
         return "redirect:/board/list/" + board.getBid();
+    }
+
+    /**
+     * 댓글 등록, 수정 처리
+     * @param form
+     * @param errors
+     * @param model
+     * @return
+     */
+    @PostMapping("/comment")
+    public String comment(@Valid RequestComment form, Errors errors, Model model) {
+        String mode = form.getMode();
+        mode = StringUtils.hasText(mode) ? mode : "write";
+
+        commentValidator.validate(form, errors);
+
+        if (errors.hasErrors()) {
+            if (!mode.equals("edit")) { // 댓글 등록시에는 alert 메세지로 검증 실패를 알린다.
+                FieldError err = errors.getFieldErrors().get(0);
+                String code = err.getCode();
+                String field = err.getField();
+                throw new AlertException(utils.getMessage(code + ".requestComment." + field));
+            }
+            return utils.tpl("board/comment"); // 수정시에만
+        }
+
+        // 댓글 등록/수정 서비스 추가.
+
+        String redirectUrl = String.format("/board/view/%d#comment_%d", form.getBoardDataSeq(), 0L); // 0L은 현재 임시
+
+        if (mode.equals("edit")) {
+            return "redirect:" + redirectUrl;
+        } else {
+            redirectUrl = request.getContextPath() + redirectUrl;
+            model.addAttribute("script", "parent.location.replace('" + redirectUrl + "');");
+            return "common/_execute_script";
+        }
     }
 
     /**
