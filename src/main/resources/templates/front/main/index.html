@@ -3,6 +3,11 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{front/layouts/main}">
     <main layout:fragment="content">
-        <h1>메인 영역...</h1>
+
+        <section class="latest-news">
+            <h1 th:text="#{새로운_소식}"></h1>
+            <th:block th:replace="~{front/board/gallery/_items::items(items=${@boardInfoService.getLatest('news',12)})}"></th:block>
+            <a th:href="@{board/list/news}" th:text="#{더보기}"></a>
+        </section>
     </main>
 </html>
