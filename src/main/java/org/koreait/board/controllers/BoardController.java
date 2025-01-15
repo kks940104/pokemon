@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.koreait.board.entities.Board;
 import org.koreait.board.entities.BoardData;
+import org.koreait.board.entities.CommentData;
 import org.koreait.board.exceptions.GuestPasswordCheckException;
 import org.koreait.board.services.*;
+import org.koreait.board.services.comment.CommentUpdateService;
 import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.validators.BoardValidator;
 import org.koreait.board.validators.CommentValidator;
@@ -56,6 +58,7 @@ public class BoardController {
     private final BoardDeleteService boardDeleteService;
     private final BoardUpdateService boardUpdateService;
     private final BoardConfigInfoService configInfoService;
+    private final CommentUpdateService commentUpdateService;
     private final BoardViewUpdateService boardViewUpdateService;
 
     /**
@@ -216,9 +219,9 @@ public class BoardController {
             return utils.tpl("board/comment"); // 수정시에만
         }
 
-        // 댓글 등록/수정 서비스 추가.
+        CommentData item = commentUpdateService.save(form); // 댓글 등록/수정 서비스
 
-        String redirectUrl = String.format("/board/view/%d#comment_%d", form.getBoardDataSeq(), 0L); // 0L은 현재 임시
+        String redirectUrl = String.format("/board/view/%d#comment_%d", form.getBoardDataSeq(), item.getSeq());
 
         if (mode.equals("edit")) {
             return "redirect:" + redirectUrl;
