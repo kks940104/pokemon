@@ -5,6 +5,7 @@ import org.koreait.board.services.configs.BoardConfigInfoService;
 import org.koreait.board.exceptions.BoardDataNotFoundException;
 import org.koreait.board.repositories.BoardDataRepository;
 import com.querydsl.core.types.dsl.StringExpression;
+import org.koreait.file.entites.FileInfo;
 import org.koreait.member.constants.Authority;
 import org.springframework.context.annotation.Lazy;
 import org.koreait.board.controllers.BoardSearch;
@@ -256,9 +257,14 @@ public class BoardInfoService {
         // region 게시판 파일 정보
 
         String gid = item.getGid();
-        item.setEditorImages(fileInfoService.getList(gid, "editor"));
+        List<FileInfo> editorImages = fileInfoService.getList(gid, "editor");
+        item.setEditorImages(editorImages);
         item.setAttachFiles(fileInfoService.getList(gid, "attach"));
 
+        if (editorImages != null && !editorImages.isEmpty()) {
+            FileInfo selectedImage = editorImages.stream().filter(FileInfo::isSelected).findFirst().orElseGet(() -> editorImages.get(0));
+            item.setSelectedImage(selectedImage);
+        }
         // endregion
 
         // region 이전, 다음 게시글
