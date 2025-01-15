@@ -1,7 +1,11 @@
 package org.koreait.board.validators;
 
 import lombok.RequiredArgsConstructor;
+import org.koreait.board.entities.BoardData;
+import org.koreait.board.entities.CommentData;
+import org.koreait.board.repositories.CommentDataRepository;
 import org.koreait.member.libs.MemberUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.stereotype.Component;
@@ -17,6 +21,8 @@ import org.koreait.global.validator.PasswordValidator;
 public class CommentValidator implements Validator, PasswordValidator {
 
     private final MemberUtil memberUtil;
+    private final PasswordEncoder passwordEncoder;
+    private final CommentDataRepository commentDataRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -54,6 +60,23 @@ public class CommentValidator implements Validator, PasswordValidator {
                 errors.rejectValue("guestPw", "Complexity");
             }
         }
+    }
+
+    /**
+     * 비회원 비밀번호 체크
+     * @param password
+     * @param seq
+     */
+    public boolean checkGuestPassword(String password, Long seq) {
+        if (seq == null) return false;
+
+        CommentData item = commentDataRepository.findById(seq).orElse(null);
+
+        if (item != null && StringUtils.hasText(item.getGuestPw())) {
+            return passwordEncoder.matches(password, item.getGuestPw());
+        }
+
+        return false;
     }
 }
 

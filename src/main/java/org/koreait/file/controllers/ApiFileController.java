@@ -30,12 +30,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiFileController {
     private final Utils utils;
-    private final FileUploadService uploadService;
-    private final FileDownloadService downloadService;
     private final FileInfoService infoService;
-    private final FileDeleteService deleteService;
     private final FileDoneService doneService;
+    private final FileImageService imageService;
+    private final FileUploadService uploadService;
+    private final FileDeleteService deleteService;
     private final ThumbnailService thumbnailService;
+    private final FileDownloadService downloadService;
 
     /**
      * 파일 업로드
@@ -52,8 +53,8 @@ public class ApiFileController {
             @Parameter(name = "location", description = "파일 그룹 내에서 위치 코드"),
             @Parameter(name = "file", description = "업로드 파일, 복수개 전송 가능", required = true)
     })
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/upload")
+    @ResponseStatus(HttpStatus.CREATED)
     public JSONData upload(@RequestPart("file") MultipartFile[] files, @Valid RequestUpload form, Errors errors) {
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
@@ -157,6 +158,12 @@ public class ApiFileController {
         } catch (IOException e){
 
         }
+    }
+
+    @GetMapping("/select/{seq}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void select(@PathVariable("seq") Long seq) {
+        imageService.select(seq);
     }
 
     // region Test했던것
