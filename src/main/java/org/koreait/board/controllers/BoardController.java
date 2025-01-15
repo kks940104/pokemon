@@ -244,6 +244,22 @@ public class BoardController {
     }
 
     /**
+     * 댓글 수정
+     *
+     * @param seq
+     * @param model
+     * @return
+     */
+    @GetMapping("/edit/{seq}")
+    public String commentEdit(@PathVariable("seq") Long seq, Model model) {
+
+        commonProcess(seq, "comment_edit", model);
+        RequestComment form = commentInfoService.getForm(seq);
+        model.addAttribute("requestComment", form);
+        return utils.tpl("board/comment");
+    }
+
+    /**
      * 비회원 비밀번호 처리
      *
      * @return
